@@ -20,6 +20,10 @@ Before you begin, ensure you have met the following requirements:
    ```bash
    git clone https://github.com/B1gdawg0/se-project-backend.git
    ```
+2. **Navigate to the project directory:**
+   ```bash
+   cd <Project directory>
+   ```
 
 2. **Fetch the latest changes:**
    ```bash
