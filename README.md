@@ -25,26 +25,26 @@ Before you begin, ensure you have met the following requirements:
    cd <Project directory>
    ```
 
-2. **Fetch the latest changes:**
+3. **Fetch the latest changes:**
    ```bash
    git fetch
    ```
 
-3. **Checkout the develop branch:**
+4. **Checkout the develop branch:**
    ```bash
    git checkout develop
    ```
-4. **Update dependencys:**
+5. **Update dependencys:**
    ```bash
    go mod tidy
    ```
 
-5. **Copy the example environment configuration:**
+6. **Copy the example environment configuration:**
    ```bash
    cp .env.example .env
    ```
 
-6. **Edit the `.env` file:**
+7. **Edit the `.env` file:**
    - Change the necessary keys according to your environment.
 
 ## Running the Application
