@@ -18,7 +18,7 @@ Before you begin, ensure you have met the following requirements:
 
 1. **Clone the repository:**
    ```bash
-   git clone <repo>
+   git clone https://github.com/B1gdawg0/se-project-backend.git
    ```
 
 2. **Fetch the latest changes:**
