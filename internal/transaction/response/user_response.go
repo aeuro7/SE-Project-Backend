@@ -1,17 +1,17 @@
 package response
 
-type UserCreateResponse struct{
-	ID int `json:"ID"`
-	Fname string `json:"fname"`
-	Lname string `json:"lname"`
+import "github.com/jackc/pgx/v5/pgtype"
+
+type CreateUserResponse struct{
+	ID 		 pgtype.UUID `json:"ID"`
+	Email    string `json:"email"`
+    Password string `son:"password"`
+    Name     string `json:"name"`
+    Phone    string `json:"phone"`
 }
 
-type GetUserResponse struct{
-	ID int `json:"ID"`
-	Fname string `json:"fname"`
-	Lname string `json:"lname"`
-}
+type FindUserResponse CreateUserResponse
 
-type GetUsersResponse struct{
-	Users []GetUserResponse
+type FindUsersResponse struct{
+	Users []FindUserResponse
 }
