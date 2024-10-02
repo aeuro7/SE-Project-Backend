@@ -1,27 +1,27 @@
 package repositories
 
 import (
+	"github.com/B1gdawg0/se-project-backend/internal/infrastructure/entities"
 	"github.com/B1gdawg0/se-project-backend/internal/infrastructure/queries"
-	"github.com/B1gdawg0/se-project-backend/internal/transaction/requests"
 	"github.com/B1gdawg0/se-project-backend/internal/transaction/response"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/user"
+	"github.com/jackc/pgx/v5/pgtype"
 	"gorm.io/gorm"
 )
 
-
-type UserRepositoryImpl struct{
+type UserRepositoryImpl struct {
 	Queries queries.Database
 }
 
-func ProvideUserRepository(db *gorm.DB) user.UserRepository{
+func ProvideUserRepository(db *gorm.DB) user.UserRepository {
 	return &UserRepositoryImpl{
 		Queries: queries.New(db),
 	}
 }
 
-func (uri *UserRepositoryImpl) FindAll() (*response.GetUsersResponse, error){
-	response, err := uri.Queries.GetUsers()
-
+func (uri *UserRepositoryImpl) FindUserByEmail(email string) (*response.FindUserResponse, error){
+	response, err := uri.Queries.FindUserByEmail(email)
+	
 	if err != nil{
 		return nil, err
 	}
@@ -29,11 +29,30 @@ func (uri *UserRepositoryImpl) FindAll() (*response.GetUsersResponse, error){
 	return response, nil
 }
 
-
-func (uri *UserRepositoryImpl) Save(rq *requests.CreateUserRequest) (*response.UserCreateResponse, error){
-	response, err := uri.Queries.CreateUser(rq)
-
+func (uri *UserRepositoryImpl) FindUserByID(id pgtype.UUID) (*response.FindUserResponse, error){
+	response, err := uri.Queries.FindUserByID(id)
+	
 	if err != nil{
+		return nil, err
+	}
+
+	return response, nil
+}
+
+func (uri *UserRepositoryImpl) FindAll() (*response.FindUsersResponse, error) {
+	response, err := uri.Queries.FindAll()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+func (uri *UserRepositoryImpl) Save(user *entities.User) (*response.CreateUserResponse, error) {
+	response, err := uri.Queries.CreateUser(user)
+
+	if err != nil {
 		return nil, err
 	}
 

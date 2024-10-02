@@ -6,9 +6,11 @@ require github.com/spf13/viper v1.19.0
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
+	github.com/emicklei/pgtalk v1.5.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gofiber/fiber/v2 v2.52.5 // indirect
-	github.com/google/uuid v1.5.0 // indirect
+	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/google/wire v0.6.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
