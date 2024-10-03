@@ -1,6 +1,8 @@
 package user
 
 import (
+	"errors"
+
 	"github.com/B1gdawg0/se-project-backend/internal/transaction/response"
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -34,8 +36,8 @@ func (uc *UserService) FindAll() (*response.FindUsersResponse, error) {
 func (uc *UserService) FindUserByEmail(email string) (*response.FindUserResponse, error) {
 	response, err := uc.repo.FindUserByEmail(email)
 
-	if err != nil {
-		return nil, err
+	if err != nil || response.Email == ""{
+		return nil, errors.New("user not found")
 	}
 
 	return response, nil
@@ -44,8 +46,8 @@ func (uc *UserService) FindUserByEmail(email string) (*response.FindUserResponse
 func (uc *UserService) FindUserByID(id pgtype.UUID) (*response.FindUserResponse, error) {
 	response, err := uc.repo.FindUserByID(id)
 
-	if err != nil {
-		return nil, err
+	if err != nil || response.Email == ""{
+		return nil, errors.New("user not found")
 	}
 
 	return response, nil

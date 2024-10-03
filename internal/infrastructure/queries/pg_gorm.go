@@ -35,6 +35,17 @@ func (pg *PGGormDB) FindUserByID(id pgtype.UUID) (*response.FindUserResponse, er
 	return response, nil
 }
 
+func (pg *PGGormDB) FindAllTable() ([]*entities.Table, error){
+	var tables []*entities.Table
+
+	if err := pg.db.Find(&tables).Error; err != nil {
+		return nil, err
+	}
+
+	return tables,nil
+}
+
+// TODO: change return value to entitles.User
 func (pg *PGGormDB) FindUserByEmail(email string) (*response.FindUserResponse, error) {
 	user := new(entities.User)
 
@@ -53,6 +64,7 @@ func (pg *PGGormDB) FindUserByEmail(email string) (*response.FindUserResponse, e
 	return response, nil
 }
 
+// TODO: change return value to entitles.User
 func (pg *PGGormDB) FindAll() (*response.FindUsersResponse, error) {
 	var users = new([]entities.User)
 
@@ -78,6 +90,7 @@ func (pg *PGGormDB) FindAll() (*response.FindUsersResponse, error) {
 	return usersResponse, nil
 }
 
+// TODO: change return value to entitles.User
 func (pg *PGGormDB) CreateUser(rq *entities.User) (*response.CreateUserResponse, error) {
 
 	if err := pg.db.Create(rq).Error; err != nil {
@@ -93,4 +106,57 @@ func (pg *PGGormDB) CreateUser(rq *entities.User) (*response.CreateUserResponse,
 	}
 
 	return response, nil
+}
+
+
+func (pg *PGGormDB) CreateTable(rq *entities.Table) (*entities.Table, error){
+	if err := pg.db.Create(rq).Error; err != nil{
+		return nil, err
+	}
+
+	return rq, nil
+}
+
+
+func (pg *PGGormDB) FindTableByID(id string) (*entities.Table, error){
+	table := new(entities.Table)
+	if err := pg.db.Where("id = ?", id).Find(table).Error; err != nil{
+		return nil, err
+	}
+
+
+	return table, nil
+}
+
+func (pg *PGGormDB) UpdateTableByID(rq *entities.Table) (*entities.Table, error){
+	table := new(entities.Table)
+    if err := pg.db.First(table, "id = ?", rq.ID).Error; err != nil {
+        return nil, err
+    }
+
+	table.C_ID = rq.C_ID
+	table.Status = rq.Status
+
+    if err := pg.db.Save(table).Error; err != nil {
+        return nil, err
+    }
+
+    return table, nil
+}
+
+
+func (pg *PGGormDB) DeleteTableByID(id string) (error){
+	table:= new(entities.Table)
+
+	if err := pg.db.First(table, "id = ?", id).Error; err != nil{
+		return err
+	}
+
+
+	if err := pg.db.Delete(table).Error; err != nil{
+		return err
+	}
+
+
+	return nil
 }
