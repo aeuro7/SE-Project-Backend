@@ -8,6 +8,7 @@ import (
 	"github.com/B1gdawg0/se-project-backend/internal/infrastructure"
 	"github.com/B1gdawg0/se-project-backend/internal/infrastructure/entities"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/auth"
+	"github.com/B1gdawg0/se-project-backend/internal/usecases/table"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/user"
 )
 
@@ -33,7 +34,11 @@ func InitHandler() *rest.Handler{
 	authService := auth.ProvideAuthService(userRepo)
 	authHandler := handlers.ProvideAuthRestHandler(authService)
 
-	handler := rest.ProvideHandler(userHandler, authHandler)
+	tableRepo := repositories.ProvideTableRepository(db)
+	tableService := table.ProvideTableService(tableRepo)
+	tableHandler := handlers.ProvideTableRestHandler(tableService)
+
+	handler := rest.ProvideHandler(userHandler, authHandler, tableHandler)
 
 	return handler
 }

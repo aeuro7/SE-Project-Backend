@@ -11,4 +11,11 @@ type Database interface{
 	FindUserByEmail(email string) (*response.FindUserResponse, error)
 	FindUserByID(id pgtype.UUID) (*response.FindUserResponse, error)
 	FindAll() (*response.FindUsersResponse, error)
+
+
+	CreateTable(rq *entities.Table) (*entities.Table, error)
+	FindAllTable()([]*entities.Table, error)
+	FindTableByID(id string) (*entities.Table, error)
+	UpdateTableByID(rq *entities.Table) (*entities.Table, error)
+	DeleteTableByID(id string) ( error)
 } 
