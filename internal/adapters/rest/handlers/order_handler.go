@@ -20,7 +20,7 @@ func ProvideOrderRestHandler(usecase order.OrderUseCase) *OrderRestHandler{
 	}
 }
 
-func (orh *OrderRestHandler) FindAllOrder(c *fiber.Ctx) error{
+func (orh *OrderRestHandler) GetAllOrder(c *fiber.Ctx) error{
 	orders, err := orh.usecase.FindAllOrder()
 
 	if err != nil{
@@ -38,7 +38,7 @@ func (orh *OrderRestHandler) FindAllOrder(c *fiber.Ctx) error{
 	})
 }
 
-func (orh *OrderRestHandler) FindOrderByID(c *fiber.Ctx) error{
+func (orh *OrderRestHandler) GetOrderByID(c *fiber.Ctx) error{
 	idStr := c.Params("id")
 
 	uuid, err := utils.StringToUUID(idStr)
