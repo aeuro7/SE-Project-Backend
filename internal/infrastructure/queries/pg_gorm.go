@@ -66,7 +66,7 @@ func (pg *PGGormDB) FindUserByEmail(email string) (*response.FindUserResponse, e
 
 // TODO: change return value to entitles.User
 func (pg *PGGormDB) FindAll() (*response.FindUsersResponse, error) {
-	var users = new([]entities.User)
+	users := new([]*entities.User)
 
 	if err := pg.db.Find(users).Error; err != nil {
 		return nil, err
@@ -159,4 +159,33 @@ func (pg *PGGormDB) DeleteTableByID(id string) (error){
 
 
 	return nil
+}
+
+func (pg *PGGormDB) FindAllOrder() ([]*entities.Order, error){
+	orders := new([]*entities.Order)
+
+	if err := pg.db.Find(orders).Error; err != nil{
+		return nil, err
+	}
+
+	return *orders,nil
+}
+
+func (pg *PGGormDB) FindOrderByID(id pgtype.UUID) (*entities.Order, error){
+	order := new(entities.Order)
+	if err := pg.db.First(order, "id = ?", id).Error; err != nil{
+		return nil, err
+	}
+
+	return order, nil
+}
+
+
+func (pg *PGGormDB) CreateOrderByID(rq *entities.Order) (*entities.Order, error){
+	if err := pg.db.Create(rq).Error; err != nil{
+		return nil, err
+	}
+
+
+	return rq, nil
 }

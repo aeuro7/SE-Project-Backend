@@ -4,9 +4,8 @@ import (
 	"github.com/B1gdawg0/se-project-backend/internal/infrastructure/entities"
 	"github.com/B1gdawg0/se-project-backend/internal/transaction/requests"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/table"
-	"github.com/emicklei/pgtalk/convert"
+	"github.com/B1gdawg0/se-project-backend/internal/utils"
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 )
 
 const (
@@ -124,18 +123,18 @@ func (trh *TableRestHandler) UpdateTableByID(c *fiber.Ctx) error{
 		})
 	}
 
-	if _, err := uuid.Parse(req.C_ID); err!=nil {
+	c_id, err := utils.StringToUUID(req.C_ID)
+
+	if err != nil{
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message":"Bad Request",
-			"error":"Invalid UUID",
+			"error":"Customer id must be UUID",
 		})
 	}
 
-	c_id := convert.StringToUUID(req.C_ID)
-
 	payload := &entities.Table{
 		ID: id,
-		C_ID: c_id,
+		C_ID: *c_id,
 		Status: req.Status,
 	}
 

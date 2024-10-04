@@ -18,4 +18,8 @@ type Database interface{
 	FindTableByID(id string) (*entities.Table, error)
 	UpdateTableByID(rq *entities.Table) (*entities.Table, error)
 	DeleteTableByID(id string) ( error)
+
+	FindOrderByID(id pgtype.UUID) (*entities.Order, error)
+	FindAllOrder()([]*entities.Order,error)
+	CreateOrderByID(rq *entities.Order) (*entities.Order, error)
 } 
