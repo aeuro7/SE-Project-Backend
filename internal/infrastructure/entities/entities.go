@@ -49,12 +49,14 @@ type Order struct {
 
 type OrderLine struct {
     ID       pgtype.UUID `gorm:"primaryKey;type:uuid"`
-    Time     time.Time `gorm:"column:o_time"`
+    Time     time.Time   `gorm:"column:o_time"`
     O_ID     pgtype.UUID `gorm:"column:o_id"`
-    P_ID     pgtype.UUID `gorm:"column:p_id"`
-    Quantity int    `gorm:"column:l_quantity"`
-    Price    float32 `gorm:"column:l_price"`
-    Url      pgtype.UUID    `gorm:"column:l_urlslip"`
+    M_ID     pgtype.UUID `gorm:"column:m_id"`
+    Quantity int         `gorm:"column:l_quantity"`
+    Price    float32     `gorm:"column:l_price"`
+    Url      string      `gorm:"column:l_urlslip"`
+
+    Menu Menu `gorm:"foreignKey:M_ID;references:ID"`
 }
 
 type Menu struct {
