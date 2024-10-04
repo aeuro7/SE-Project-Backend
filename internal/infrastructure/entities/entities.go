@@ -38,19 +38,18 @@ type Table struct {
 
 type Order struct {
     ID         pgtype.UUID `gorm:"primaryKey;type:uuid"`
-    Status     bool      `gorm:"column:o_status"`
     Time       time.Time `gorm:"column:o_time"`
-    Url        pgtype.UUID    `gorm:"column:o_urlslip"`
-    TotalPrice float32   `gorm:"column:o_totalprice"`
-    
     OrderLines []OrderLine `gorm:"foreignKey:O_ID"`
 }
 
 type OrderLine struct {
     ID       pgtype.UUID `gorm:"primaryKey;type:uuid"`
+    Time     time.Time `gorm:"column:o_time"`
     O_ID     pgtype.UUID `gorm:"column:o_id"`
     P_ID     pgtype.UUID `gorm:"column:p_id"`
-    Quantity int    `gorm:"column:i_quantity"`
+    Quantity int    `gorm:"column:l_quantity"`
+    Price    float32 `gorm:"column:l_price"`
+    Url      pgtype.UUID    `gorm:"column:l_urlslip"`
 }
 
 type Menu struct {
