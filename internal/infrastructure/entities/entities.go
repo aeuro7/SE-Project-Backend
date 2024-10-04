@@ -16,6 +16,7 @@ type User struct {
     MusicLines []MusicLine `gorm:"foreignKey:C_ID"`
     IGLines    []IGLine    `gorm:"foreignKey:C_ID"`
     Tables     []Table     `gorm:"foreignKey:C_ID"`
+    Discount   []Discount  `gorm:"foreignKey:C_ID"`
 }
 
 type MusicLine struct {
@@ -38,7 +39,11 @@ type Table struct {
 
 type Order struct {
     ID         pgtype.UUID `gorm:"primaryKey;type:uuid"`
+    T_ID       string `gorm:"column:t_id"`
     Time       time.Time `gorm:"column:o_time"`
+
+    Discount   Discount `gorm:"foreignKey:O_ID;references:ID"`
+    Table      Table `gorm:"foreignKey:T_ID;references:ID"`
     OrderLines []OrderLine `gorm:"foreignKey:O_ID"`
 }
 
@@ -57,4 +62,18 @@ type Menu struct {
     Price       float32  `gorm:"column:m_price"`
     Description string   `gorm:"column:m_description"`
     Url         []string `gorm:"type:text[]"`
+}
+
+
+type Discount struct {
+    ID pgtype.UUID `gorm:"primaryKey;type:uuid"`
+    C_ID pgtype.UUID `gorm:"column:c_id"`
+    O_ID pgtype.UUID `gorm:"column:o_id"`
+    Percent float32 `gorm:"column:d_percent"`
+    Name string `gorm:"column:d_name"`
+    Code string `gorm:"column:d_code"`
+    Description string `gorm:"column:d_description"`
+    StartDate time.Time `gorm:"column:d_start"`
+    ExpDate time.Time `gorm:"column:d_exp"`
+    Status bool `gorm:"column:d_status"`
 }

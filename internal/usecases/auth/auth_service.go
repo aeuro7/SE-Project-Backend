@@ -9,9 +9,9 @@ import (
 	"github.com/B1gdawg0/se-project-backend/internal/transaction/requests"
 	"github.com/B1gdawg0/se-project-backend/internal/transaction/response"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/user"
+	"github.com/B1gdawg0/se-project-backend/internal/utils"
 	"github.com/emicklei/pgtalk/convert"
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -76,19 +76,13 @@ func (uc *AuthService) Register(rq *entities.User) (*response.RegisterResponse, 
 		return nil, errors.New("this email is alreadys use")
 	}
 
-	gen := uuid.New().String()
-
-	if gen == ""{
-		return nil, errors.New("can't generate uuid key")
-	}
-
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(rq.Password), bcrypt.DefaultCost)
 
 	if err != nil{
 		return nil, err
 	}
 
-	rq.ID = convert.StringToUUID(gen)
+	rq.ID = utils.GenerateUUID()
 	rq.Password = string(hashedPassword)
 
 	user, err := uc.repo.Save(rq)
