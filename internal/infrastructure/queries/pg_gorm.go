@@ -25,11 +25,10 @@ func (pg *PGGormDB) FindUserByID(id pgtype.UUID) (*response.FindUserResponse, er
 	}
 
 	response := &response.FindUserResponse{
-		ID:       user.ID,
-		Name:     user.Name,
-		Email:    user.Email,
-		Password: user.Password,
-		Phone:    user.Phone,
+		ID: user.ID,
+		Name: user.Name,
+		Email: user.Email,
+		Phone: user.Phone,
 	}
 
 	return response, nil
@@ -54,11 +53,10 @@ func (pg *PGGormDB) FindUserByEmail(email string) (*response.FindUserResponse, e
 	}
 
 	response := &response.FindUserResponse{
-		ID:       user.ID,
-		Email:    user.Email,
-		Name:     user.Name,
-		Password: user.Password,
-		Phone:    user.Phone,
+		ID: user.ID,
+		Email: user.Email,
+		Name: user.Name,
+		Phone: user.Phone,
 	}
 
 	return response, nil
@@ -75,11 +73,10 @@ func (pg *PGGormDB) FindAll() (*response.FindUsersResponse, error) {
 	list := make([]response.FindUserResponse, len(*users))
 	for i, ctx := range *users {
 		list[i] = response.FindUserResponse{
-			ID:       ctx.ID,
-			Name:     ctx.Name,
-			Email:    ctx.Email,
-			Password: ctx.Password,
-			Phone:    ctx.Phone,
+			ID: ctx.ID,
+			Name: ctx.Name,
+			Email: ctx.Email,
+			Phone: ctx.Phone,
 		}
 	}
 
@@ -108,8 +105,20 @@ func (pg *PGGormDB) CreateUser(rq *entities.User) (*response.CreateUserResponse,
 	return response, nil
 }
 
-func (pg *PGGormDB) CreateTable(rq *entities.Table) (*entities.Table, error) {
-	if err := pg.db.Create(rq).Error; err != nil {
+
+func (pg *PGGormDB) FindAllTable() ([]*entities.Table, error){
+	var tables []*entities.Table
+
+	if err := pg.db.Find(&tables).Error; err != nil {
+		return nil, err
+	}
+
+	return tables,nil
+}
+
+
+func (pg *PGGormDB) CreateTable(rq *entities.Table) (*entities.Table, error){
+	if err := pg.db.Create(rq).Error; err != nil{
 		return nil, err
 	}
 
@@ -176,6 +185,36 @@ func (pg *PGGormDB) FindOrderByID(id pgtype.UUID) (*entities.Order, error) {
 
 func (pg *PGGormDB) CreateOrderByID(rq *entities.Order) (*entities.Order, error) {
 	if err := pg.db.Create(rq).Error; err != nil {
+		return nil, err
+	}
+
+	return rq, nil
+}
+
+func (pg *PGGormDB) FindAllOrderLine()([]*entities.OrderLine, error){
+	olines := new([]*entities.OrderLine)
+
+	if err := pg.db.Find(olines).Error; err!= nil{
+		return nil, err
+	}
+
+	
+
+	return *olines, nil
+}
+
+
+func (pg *PGGormDB) FindOrderLineByID(id pgtype.UUID) (*entities.OrderLine, error){
+	oline := new(entities.OrderLine)
+	if err := pg.db.First(oline, "id = ?",id).Error; err != nil{
+		return nil, err
+	}
+	return oline, nil
+}
+
+
+func (pg *PGGormDB) CreateOrderLine(rq *entities.OrderLine) (*entities.OrderLine, error){
+	if err := pg.db.Create(rq).Error; err != nil{
 		return nil, err
 	}
 

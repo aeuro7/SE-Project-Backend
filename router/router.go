@@ -12,6 +12,7 @@ func RegisterApiRouter(app *fiber.App, rqHandler *rest.Handler){
 	table := app.Group("/tables")
 	order := app.Group("/orders")
 	menu := app.Group("/menu")
+	orderLine := app.Group("/order-lines")
 
 	auth.Post("/login", rqHandler.Auth.Login)
 	auth.Post("/register", rqHandler.Auth.Register)
@@ -37,4 +38,8 @@ func RegisterApiRouter(app *fiber.App, rqHandler *rest.Handler){
 	menu.Post("", rqHandler.Menu.CreateMenu)
 	menu.Put("/id=:id", rqHandler.Menu.UpdateMenuByID)
 	menu.Delete("/id=:id", rqHandler.Menu.DeleteMenuByID)
+  
+	orderLine.Get("",rqHandler.OrderLine.GetOrderLines)
+	orderLine.Get("/id=:id",rqHandler.OrderLine.GetOrderLineByID)
+	orderLine.Post("", rqHandler.OrderLine.CreateOrderLine)
 }
