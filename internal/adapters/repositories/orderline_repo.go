@@ -29,3 +29,7 @@ func (olr *OrderLineRepositoryImpl) FindOrderLineByID(id pgtype.UUID) (*entities
 func (olr *OrderLineRepositoryImpl) CreateOrderLine(rq *entities.OrderLine) (*entities.OrderLine, error) {
 	return olr.Queries.CreateOrderLine(rq)
 }
+
+func (olr *OrderLineRepositoryImpl) DeleteOrderLineByID(id pgtype.UUID) error {
+	return olr.Queries.DeleteOrderByID(id)
+}

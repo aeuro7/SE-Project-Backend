@@ -44,6 +44,7 @@ func (pg *PGGormDB) FindUserByEmail(email string) (*response.FindUserResponse, e
 
 	response := &response.FindUserResponse{
 		ID: user.ID,
+		Password: user.Password,
 		Email: user.Email,
 		Name: user.Name,
 		Phone: user.Phone,
@@ -188,6 +189,21 @@ func (pg *PGGormDB) CreateOrderByID(rq *entities.Order) (*entities.Order, error)
 	return rq, nil
 }
 
+func (pg *PGGormDB) DeleteOrderByID(id pgtype.UUID)(error){
+	order := new(entities.Order)
+
+	if err := pg.db.Where("id = ?",id).Find(order).Error; err != nil{
+		return err
+	}
+
+	if err := pg.db.Delete(order).Error; err != nil{
+		return err
+	}
+
+
+	return nil
+}
+
 
 func (pg *PGGormDB) FindAllOrderLine()([]*entities.OrderLine, error){
 	olines := new([]*entities.OrderLine)
@@ -217,4 +233,19 @@ func (pg *PGGormDB) CreateOrderLine(rq *entities.OrderLine) (*entities.OrderLine
 	}
 
 	return rq, nil
+}
+
+func (pg *PGGormDB) DeleteOrderLineByID(id pgtype.UUID) (error){
+	oline := new(entities.OrderLine)
+
+	if err := pg.db.Where("id = ?",id).Find(oline).Error; err != nil{
+		return err
+	}
+
+	if err := pg.db.Delete(oline).Error; err != nil{
+		return err
+	}
+
+
+	return nil
 }
