@@ -39,7 +39,7 @@ func (olrh *OrderLineRestHandler) GetOrderLines(c *fiber.Ctx) error{
 	})
 }
 
-func (olrh *OrderLineRestHandler) GetOrderByID(c *fiber.Ctx) error{
+func (olrh *OrderLineRestHandler) GetOrderLineByID(c *fiber.Ctx) error{
 	id, err := utils.StringToUUID(c.Params("id"))
 
 	if err != nil{
