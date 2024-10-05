@@ -34,6 +34,6 @@ func RegisterApiRouter(app *fiber.App, rqHandler *rest.Handler){
 
 	
 	orderLine.Get("",rqHandler.OrderLine.GetOrderLines)
-	orderLine.Get("/id=:id",rqHandler.OrderLine.GetOrderByID)
+	orderLine.Get("/id=:id",rqHandler.OrderLine.GetOrderLineByID)
 	orderLine.Post("", rqHandler.OrderLine.CreateOrderLine)
 }
