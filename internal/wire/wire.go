@@ -11,6 +11,7 @@ import (
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/order"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/table"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/user"
+	"github.com/B1gdawg0/se-project-backend/internal/usecases/menu"
 )
 
 func InitHandler() *rest.Handler{
@@ -43,7 +44,10 @@ func InitHandler() *rest.Handler{
 	orderService := order.ProvideOrderService(orderRepo)
 	orderHandler := handlers.ProvideOrderRestHandler(orderService)
 
-	handler := rest.ProvideHandler(userHandler, authHandler, tableHandler, orderHandler)
+	menuRepo := repositories.ProvideMenuRepository(db)
+	menuService := menu.ProvideMenuService(menuRepo)
+	menuHandler := handlers.ProvideMenuRestHandler(menuService)
+	handler := rest.ProvideHandler(userHandler, authHandler, tableHandler, orderHandler, menuHandler)
 
 	return handler
 }

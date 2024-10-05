@@ -9,13 +9,15 @@ type Handler struct{
 	Auth *handlers.AuthRestHandler
 	Table *handlers.TableRestHandler
 	Order *handlers.OrderRestHandler
+	Menu *handlers.MenuRestHandler
 }
 
-func ProvideHandler(user *handlers.UserRestHandler, auth *handlers.AuthRestHandler, table *handlers.TableRestHandler, order *handlers.OrderRestHandler) *Handler{
+func ProvideHandler(user *handlers.UserRestHandler, auth *handlers.AuthRestHandler, table *handlers.TableRestHandler, order *handlers.OrderRestHandler, menu *handlers.MenuRestHandler) *Handler{
 	return &Handler{
 		User: user,
 		Auth: auth,
 		Table: table,
 		Order: order,
+		Menu: menu,
 	}
 }
