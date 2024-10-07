@@ -36,10 +36,6 @@ func InitHandler() *rest.Handler{
 	authService := auth.ProvideAuthService(userRepo)
 	authHandler := handlers.ProvideAuthRestHandler(authService)
 
-	tableRepo := repositories.ProvideTableRepository(db)
-	tableService := table.ProvideTableService(tableRepo)
-	tableHandler := handlers.ProvideTableRestHandler(tableService)
-
 	orderRepo := repositories.ProvideOrderReposity(db)
 	orderService := order.ProvideOrderService(orderRepo)
 	orderHandler := handlers.ProvideOrderRestHandler(orderService)
@@ -47,6 +43,10 @@ func InitHandler() *rest.Handler{
 	oLineRepo := repositories.ProvideOrderLineRepository(db)
 	oLineService := orderline.ProvideOrderLineService(oLineRepo)
 	oLineHandler := handlers.ProvideOrderLineRestHandler(oLineService)
+
+	tableRepo := repositories.ProvideTableRepository(db)
+	tableService := table.ProvideTableService(tableRepo,orderRepo,oLineRepo)
+	tableHandler := handlers.ProvideTableRestHandler(tableService)
 
 	handler := rest.ProvideHandler(userHandler, authHandler, tableHandler, orderHandler, oLineHandler)
 

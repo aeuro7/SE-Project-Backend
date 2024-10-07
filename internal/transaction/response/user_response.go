@@ -5,7 +5,7 @@ import "github.com/jackc/pgx/v5/pgtype"
 type CreateUserResponse struct{
 	ID 		 pgtype.UUID `json:"ID"`
 	Email    string `json:"email"`
-    Password string `son:"password"`
+    Password string `json:"password"`
     Name     string `json:"name"`
     Phone    string `json:"phone"`
 }

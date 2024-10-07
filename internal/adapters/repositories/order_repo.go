@@ -18,14 +18,18 @@ func ProvideOrderReposity(db *gorm.DB) order.OrderReposity {
 	}
 }
 
-func (ori *OrderReposityImpl) FindAllOrder() ([]*entities.Order, error){
+func (ori *OrderReposityImpl) FindAllOrder() ([]*entities.Order, error) {
 	return ori.Queries.FindAllOrder()
 }
 
-func (ori *OrderReposityImpl) FindOrderByID(id pgtype.UUID) (*entities.Order, error){
+func (ori *OrderReposityImpl) FindOrderByID(id pgtype.UUID) (*entities.Order, error) {
 	return ori.Queries.FindOrderByID(id)
 }
 
 func (ori *OrderReposityImpl) CreateOrderByID(rq *entities.Order) (*entities.Order, error) {
 	return ori.Queries.CreateOrderByID(rq)
+}
+
+func (ori *OrderReposityImpl) DeleteOrderByID(id pgtype.UUID) error {
+	return ori.Queries.DeleteOrderByID(id)
 }

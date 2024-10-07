@@ -6,6 +6,9 @@ type CreateTableRequest struct{
 }
 
 type UpdateTableRequest struct{
+	ID string `json:"id"`
 	C_ID string `json:"c_id"`
 	Status string `json:"t_status"`
+
+	OrderLine CreateOrderLineRequest `json:"orderline"`
 }

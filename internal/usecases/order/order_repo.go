@@ -10,4 +10,5 @@ type OrderReposity interface{
 	FindAllOrder()([]*entities.Order, error)
 	FindOrderByID(id pgtype.UUID) (*entities.Order, error)
 	CreateOrderByID(*entities.Order) (*entities.Order, error)
+	DeleteOrderByID(id pgtype.UUID)(error)
 }
