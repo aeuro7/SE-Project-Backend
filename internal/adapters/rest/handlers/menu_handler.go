@@ -20,24 +20,20 @@ func ProvideMenuRestHandler(usecase menu.MenuUseCase) *MenuRestHandler {
 
 func (mrh *MenuRestHandler) GetMenuByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-
 	if id == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Bad Request",
 			"error":   "Must pass id to get the menu",
 		})
 	}
-
-	// Convert the string ID to a pgtype.UUID using utils.StringToUUID
-	_, err := utils.StringToUUID(id)
-	if err != nil {
+	
+	if (!utils.CheckUUID(id)) {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Bad Request",
-			"error":   "Invalid UUID format",
+			"error":   "Invalid UUID",
 		})
 	}
 
-	// Dereference *menuID to pass the actual value
 	menu, err := mrh.usecase.FindMenuByID(id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -46,14 +42,12 @@ func (mrh *MenuRestHandler) GetMenuByID(c *fiber.Ctx) error {
 		})
 	}
 
-	// If menu is not found
 	if menu == nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "Menu not found",
 		})
 	}
 
-	// Return the found menu
 	return c.JSON(fiber.Map{
 		"message": "Successful get menu",
 		"payload": fiber.Map{
@@ -72,7 +66,6 @@ func (mrh *MenuRestHandler) GetAllMenu(c *fiber.Ctx) error {
 		})
 	}
 
-	// If no menus are found, return an empty response
 	if allMenus == nil || len(allMenus.Menu) == 0 {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "No Menu yet",
@@ -122,7 +115,13 @@ func (mrh *MenuRestHandler) CreateMenu(c *fiber.Ctx) error {
 
 func (mrh *MenuRestHandler) UpdateMenuByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-
+	check := utils.CheckUUID(id);
+	if (!check) {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Bad Request",
+			"error":   "ID must be UUID",
+		})
+	}
 	if id == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Bad Request",
@@ -147,7 +146,7 @@ func (mrh *MenuRestHandler) UpdateMenuByID(c *fiber.Ctx) error {
 	}
 
 	payload := &entities.Menu{
-		ID:          *menuID, // Dereference *menuID to pass pgtype.UUID
+		ID:          *menuID,
 		Price:       req.Price,
 		Description: req.Description,
 		Url:         req.Url,
@@ -155,6 +154,7 @@ func (mrh *MenuRestHandler) UpdateMenuByID(c *fiber.Ctx) error {
 
 	response, err := mrh.usecase.UpdateMenu(payload)
 	if err != nil {
+		print("Handler")
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": "Error updating menu",
 			"error":   err.Error(),
@@ -171,6 +171,16 @@ func (mrh *MenuRestHandler) UpdateMenuByID(c *fiber.Ctx) error {
 
 func (mrh *MenuRestHandler) DeleteMenuByID(c *fiber.Ctx) error {
 	id := c.Params("id")
+
+	check := utils.CheckUUID(id);
+
+	if (!check) {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Bad Request",
+			"error":   "Invalid UUID",
+		})
+	}
+
 	if id == "" {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Bad Request",

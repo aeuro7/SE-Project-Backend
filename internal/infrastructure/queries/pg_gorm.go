@@ -1,6 +1,7 @@
 package queries
 
 import (
+
 	"github.com/B1gdawg0/se-project-backend/internal/infrastructure/entities"
 	"github.com/B1gdawg0/se-project-backend/internal/transaction/response"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -210,9 +211,10 @@ func (pg *PGGormDB) FindAllMenu() ([]*entities.Menu, error) {
 func (pg *PGGormDB) UpdateMenu(rq *entities.Menu) (*entities.Menu, error) {
 	menu := new(entities.Menu)
 
-	if err := pg.db.First(menu, "id = ?", menu.ID).Error; err != nil {
+	if err := pg.db.First(menu, "id = ?", rq.ID).Error; err != nil {
 		return nil, err
 	}
+	menu.ID = rq.ID
 	menu.Description = rq.Description
 	menu.Price = rq.Price
 	menu.Url = rq.Url

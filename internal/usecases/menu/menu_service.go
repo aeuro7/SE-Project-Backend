@@ -5,8 +5,8 @@ import (
 
 	"github.com/B1gdawg0/se-project-backend/internal/infrastructure/entities"
 	"github.com/B1gdawg0/se-project-backend/internal/transaction/response"
-	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/B1gdawg0/se-project-backend/internal/utils"
+	"github.com/emicklei/pgtalk/convert"
 )
 
 type MenuUseCase interface {
@@ -21,15 +21,21 @@ type MenuService struct {
 	repo MenuRepository
 }
 
-// ProvideMenuService creates a new instance of MenuService
 func ProvideMenuService(repo MenuRepository) MenuUseCase {
 	return &MenuService{
 		repo: repo,
 	}
 }
 
-// CreateMenu creates a new menu item
 func (ms *MenuService) CreateMenu(rq *entities.Menu) (*response.CreateMenuResponse, error) {
+	menuID := convert.UUIDToString(rq.ID)
+	check, err := ms.repo.FindMenuByID(menuID)
+	if check != nil && convert.UUIDToString(check.ID) != "" {
+		return nil, errors.New("menu already exist")
+	}
+	if err != nil {
+		return nil, err
+	}
 
 	menu, err := ms.repo.CreateMenu(rq)
 	if err != nil {
@@ -58,7 +64,6 @@ func (ms *MenuService) FindMenuByID(id string) (*response.GetMenuResponse, error
 		return nil, errors.New("menu not found")
 	}
 
-	// Return the found menu response
 	return &response.GetMenuResponse{
 		ID:          menu.ID,
 		Price:       menu.Price,
@@ -67,14 +72,12 @@ func (ms *MenuService) FindMenuByID(id string) (*response.GetMenuResponse, error
 	}, nil
 }
 
-// FindAllMenu retrieves all available menu items
 func (ms *MenuService) FindAllMenu() (*response.GetAllMenuResponse, error) {
 	menus, err := ms.repo.FindAllMenu()
 	if err != nil {
 		return nil, err
 	}
 
-	// Map entities to response objects
 	var menuResponses []response.GetMenuResponse
 	for _, menu := range menus {
 		menuResponses = append(menuResponses, response.GetMenuResponse{
@@ -85,35 +88,31 @@ func (ms *MenuService) FindAllMenu() (*response.GetAllMenuResponse, error) {
 		})
 	}
 
-	// Return the list of menus
 	return &response.GetAllMenuResponse{
 		Menu: menuResponses,
 	}, nil
 }
 
-// UpdateMenu updates an existing menu item
 func (ms *MenuService) UpdateMenu(rq *entities.Menu) (*response.UpdateMenuResponse, error) {
-	zeroUUID := pgtype.UUID{}
 
-	if rq.ID.Bytes == zeroUUID.Bytes {
-		return nil, errors.New("menu ID is required")
+	menuID := convert.UUIDToString(rq.ID)
+	check := utils.CheckUUID(menuID)
+	print("Service")
+	if !check {
+		print("Invalid")
+		return nil, errors.New("invalid UUID")
 	}
 
-	menuID := uuid.UUID(rq.ID.Bytes).String() // Convert to uuid.UUID and then to string
-
-	// Optionally, find the menu by ID to verify it exists before updating
 	_, err := ms.FindMenuByID(menuID)
 	if err != nil {
 		return nil, errors.New("menu not found")
 	}
 
-	// Call the repository to update the menu
 	updatedMenu, err := ms.repo.UpdateMenu(rq)
 	if err != nil {
 		return nil, err
 	}
 
-	// Return the updated menu response
 	return &response.UpdateMenuResponse{
 		ID:          updatedMenu.ID,
 		Price:       updatedMenu.Price,
