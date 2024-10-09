@@ -35,16 +35,6 @@ func (pg *PGGormDB) FindUserByID(id pgtype.UUID) (*response.FindUserResponse, er
 	return response, nil
 }
 
-func (pg *PGGormDB) FindAllTable() ([]*entities.Table, error) {
-	var tables []*entities.Table
-
-	if err := pg.db.Find(&tables).Error; err != nil {
-		return nil, err
-	}
-
-	return tables, nil
-}
-
 // TODO: change return value to entitles.User
 func (pg *PGGormDB) FindUserByEmail(email string) (*response.FindUserResponse, error) {
 	user := new(entities.User)
