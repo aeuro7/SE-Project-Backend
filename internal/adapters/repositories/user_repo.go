@@ -38,6 +38,15 @@ func (uri *UserRepositoryImpl) FindUserByID(id pgtype.UUID) (*response.FindUserR
 
 	return response, nil
 }
+func (uri *UserRepositoryImpl) FindUserByPhone(phone string) (*response.FindUserResponse, error){
+	response, err := uri.Queries.FindUserByPhone(phone)
+	
+	if err != nil{
+		return nil, err
+	}
+
+	return response, nil
+}
 
 func (uri *UserRepositoryImpl) FindAll() (*response.FindUsersResponse, error) {
 	response, err := uri.Queries.FindAll()

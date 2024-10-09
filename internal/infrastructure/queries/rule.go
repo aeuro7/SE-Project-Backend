@@ -9,6 +9,7 @@ import (
 type Database interface{
 	CreateUser(rq *entities.User) (*response.CreateUserResponse, error)
 	FindUserByEmail(email string) (*response.FindUserResponse, error)
+	FindUserByPhone(phone string) (*response.FindUserResponse, error)
 	FindUserByID(id pgtype.UUID) (*response.FindUserResponse, error)
 	FindAll() (*response.FindUsersResponse, error)
 

@@ -52,6 +52,23 @@ func (pg *PGGormDB) FindUserByEmail(email string) (*response.FindUserResponse, e
 
 	return response, nil
 }
+func (pg *PGGormDB) FindUserByPhone(phone string) (*response.FindUserResponse, error) {
+	user := new(entities.User)
+
+	if err := pg.db.Where("c_phone = ?", phone).Find(user); err.Error != nil{
+		return nil, err.Error
+	}
+
+	response := &response.FindUserResponse{
+		ID: user.ID,
+		Password: user.Password,
+		Email: user.Email,
+		Name: user.Name,
+		Phone: user.Phone,
+	}
+
+	return response, nil
+}
 
 // TODO: change return value to entitles.User
 func (pg *PGGormDB) FindAll() (*response.FindUsersResponse, error) {
