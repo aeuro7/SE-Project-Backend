@@ -9,10 +9,10 @@ import (
 )
 
 type UserUseCase interface {
-	FindUserByID(id pgtype.UUID) (*response.FindUserResponse, error)
-	FindUserByEmail(email string) (*response.FindUserResponse, error)
-	FindUserByPhone(phone string) (*response.FindUserResponse, error)
-	FindAll() (*response.FindUsersResponse, error)
+	FindUserByID(id pgtype.UUID) (*entities.User, error) 
+	FindUserByEmail(email string) (*entities.User, error) 
+	FindUserByPhone(phone string) (*entities.User, error)
+	FindAll() ([]*entities.User, error) 
 	Save(user *entities.User) (*response.CreateUserResponse, error)
 
 }
@@ -27,7 +27,7 @@ func ProvideUserService(repo UserRepository) UserUseCase {
 	}
 }
 
-func (uc *UserService) FindAll() (*response.FindUsersResponse, error) {
+func (uc *UserService) FindAll() ([]*entities.User, error)  {
 	list, err := uc.repo.FindAll()
 
 	if err != nil {
@@ -37,7 +37,7 @@ func (uc *UserService) FindAll() (*response.FindUsersResponse, error) {
 	return list, nil
 }
 
-func (uc *UserService) FindUserByEmail(email string) (*response.FindUserResponse, error) {
+func (uc *UserService) FindUserByEmail(email string) (*entities.User, error)  {
 	response, err := uc.repo.FindUserByEmail(email)
 
 	if err != nil || response.Email == ""{
@@ -47,7 +47,7 @@ func (uc *UserService) FindUserByEmail(email string) (*response.FindUserResponse
 	return response, nil
 }
 
-func (uc *UserService) FindUserByID(id pgtype.UUID) (*response.FindUserResponse, error) {
+func (uc *UserService) FindUserByID(id pgtype.UUID) (*entities.User, error) {
 	response, err := uc.repo.FindUserByID(id)
 
 	if err != nil || response.Email == ""{
@@ -56,7 +56,7 @@ func (uc *UserService) FindUserByID(id pgtype.UUID) (*response.FindUserResponse,
 
 	return response, nil
 }
-func (uc *UserService) FindUserByPhone(phone string) (*response.FindUserResponse, error) {
+func (uc *UserService) FindUserByPhone(phone string) (*entities.User, error) {
 	response, err := uc.repo.FindUserByPhone(phone)
 
 	if err != nil || response.Phone == ""{
@@ -104,7 +104,7 @@ func (uc *UserService) Save(user *entities.User) (*response.CreateUserResponse, 
     if err2 != nil {
         return nil, err2
     }
-
+    
     if selected != nil && selected.Phone == user.Phone {
         return nil, errors.New("user Phone already exists")
     }
