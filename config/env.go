@@ -9,6 +9,8 @@ type Config struct{
 	PostgresPassword string `mapstructure:"POSTGRES_PASSWORD"`
 	PostgresDB       string `mapstructure:"POSTGRES_DB"`
 	PostgresPort     string `mapstructure:"POSTGRES_PORT"`
+	ADMIN_EMAIL      string `mapstructure: "ADMIN_EMAIL"`
+	ADMIN_PASSWORD   string `mapstructure: "ADMIN_PASSWORD"`
 }
 
 func ProvideConfig() *Config {
