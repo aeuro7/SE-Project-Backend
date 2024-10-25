@@ -24,8 +24,13 @@ type Database interface{
 	FindAllOrder()([]*entities.Order,error)
 	CreateOrderByID(rq *entities.Order) (*entities.Order, error)
 	DeleteOrderByID(id pgtype.UUID) (error)
-
 	FindOrderLineByID(id pgtype.UUID) (*entities.OrderLine, error)
 	FindAllOrderLine()([]*entities.OrderLine, error)
 	CreateOrderLine(rq *entities.OrderLine) (*entities.OrderLine, error)
+
+	CreateMenu(rq *entities.Menu) (*entities.Menu, error)
+	FindMenuByID(id string) (*entities.Menu, error)
+	FindAllMenu() ([]*entities.Menu, error)
+	UpdateMenu(rq *entities.Menu) (*entities.Menu, error)
+	DeleteMenu(id string) (error)
 } 
