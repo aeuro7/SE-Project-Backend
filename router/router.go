@@ -13,15 +13,18 @@ func RegisterApiRouter(app *fiber.App, rqHandler *rest.Handler){
 	order := app.Group("/orders")
 	menu := app.Group("/menu")
 	orderLine := app.Group("/order-lines")
+	admin := app.Group("/admin")
 
 	auth.Post("/login", rqHandler.Auth.Login)
 	auth.Post("/register", rqHandler.Auth.Register)
 
 	user.Use(middleware.CheckJWT)
+	
 	user.Get("", rqHandler.User.GetUsers)
 	user.Get("/id=:id", rqHandler.User.GetUserByID)
 	user.Get("/email=:email",rqHandler.User.GetUserByEmail)
-
+	user.Get("/phone=:phone",rqHandler.User.GetCustomerByPhone)
+	user.Post("", rqHandler.User.CreateUser)
 
 	table.Get("", rqHandler.Table.GetTables)
 	table.Get("/id=:id", rqHandler.Table.GetTableByID)
@@ -42,4 +45,18 @@ func RegisterApiRouter(app *fiber.App, rqHandler *rest.Handler){
 	orderLine.Get("",rqHandler.OrderLine.GetOrderLines)
 	orderLine.Get("/id=:id",rqHandler.OrderLine.GetOrderLineByID)
 	orderLine.Post("", rqHandler.OrderLine.CreateOrderLine)
+
+	admin.Get("/users", rqHandler.User.GetUsers)
+	admin.Get("/users/id=:id", rqHandler.User.GetUserByID)
+	admin.Get("/users/email=:email", rqHandler.User.GetUserByEmail)
+
+	admin.Get("/tables", rqHandler.Table.GetTables)
+	admin.Get("/tables/id=:id", rqHandler.Table.GetTableByID)
+
+	admin.Get("/orders", rqHandler.Order.GetAllOrder)
+	admin.Get("/orders/id=:id", rqHandler.Order.GetOrderByID)
+
+	admin.Get("/order-lines", rqHandler.OrderLine.GetOrderLines)
+	admin.Get("/order-lines/id=:id", rqHandler.OrderLine.GetOrderLineByID)
+
 }

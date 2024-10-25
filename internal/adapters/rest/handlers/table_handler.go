@@ -123,23 +123,17 @@ func (trh *TableRestHandler) UpdateTableByID(c *fiber.Ctx) error{
 		})
 	}
 
-	c_id, err := utils.StringToUUID(req.C_ID)
-
-	if err != nil{
+	if !utils.CheckUUID(req.C_ID){
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message":"Bad Request",
 			"error":"Customer id must be UUID",
 		})
 	}
 
-	payload := &entities.Table{
-		ID: id,
-		C_ID: *c_id,
-		Status: req.Status,
-	}
+	req.ID = id
 
 
-	response, err := trh.usecase.UpdateTableByID(payload)
+	response, err := trh.usecase.UpdateTableByID(req)
 
 	if err != nil{
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -148,6 +142,16 @@ func (trh *TableRestHandler) UpdateTableByID(c *fiber.Ctx) error{
 		})
 	}
 
+	if response.Order.ID == "" && response.OrderLine.ID == ""{
+		return c.JSON(fiber.Map{
+			"message":"Succesful update table",
+			"payload":fiber.Map{
+				"id":response.ID,
+				"c_id":response.C_ID,
+				"status":response.Status,
+			},
+		})
+	}
 	return c.JSON(fiber.Map{
 		"message":"Succesful update table",
 		"payload":fiber.Map{

@@ -18,64 +18,45 @@ func New(db *gorm.DB) Database {
 	}
 }
 
-func (pg *PGGormDB) FindUserByID(id pgtype.UUID) (*response.FindUserResponse, error) {
+func (pg *PGGormDB) FindUserByID(id pgtype.UUID) (*entities.User, error)  {
 	user := new(entities.User)
 
 	if err := pg.db.Where("id = ?", id).Find(user); err.Error != nil {
 		return nil, err.Error
 	}
 
-	response := &response.FindUserResponse{
-		ID: user.ID,
-		Name: user.Name,
-		Email: user.Email,
-		Phone: user.Phone,
-	}
-
-	return response, nil
+	return user, nil
 }
 
 // TODO: change return value to entitles.User
-func (pg *PGGormDB) FindUserByEmail(email string) (*response.FindUserResponse, error) {
+func (pg *PGGormDB) FindUserByEmail(email string) (*entities.User, error)  {
 	user := new(entities.User)
 
 	if err := pg.db.Where("c_email = ?", email).Find(user); err.Error != nil {
 		return nil, err.Error
 	}
 
-	response := &response.FindUserResponse{
-		ID: user.ID,
-		Email: user.Email,
-		Name: user.Name,
-		Phone: user.Phone,
+	return user, nil
+}
+func (pg *PGGormDB) FindUserByPhone(phone string) (*entities.User, error) {
+	user := new(entities.User)
+
+	if err := pg.db.Where("c_phone = ?", phone).Find(user); err.Error != nil{
+		return nil, err.Error
 	}
 
-	return response, nil
+	return user, nil
 }
 
 // TODO: change return value to entitles.User
-func (pg *PGGormDB) FindAll() (*response.FindUsersResponse, error) {
+func (pg *PGGormDB) FindAll() ([]*entities.User, error) {
 	users := new([]*entities.User)
 
-	if err := pg.db.Find(users).Error; err != nil {
+	if err := pg.db.Find(&users).Error; err != nil {
 		return nil, err
 	}
 
-	list := make([]response.FindUserResponse, len(*users))
-	for i, ctx := range *users {
-		list[i] = response.FindUserResponse{
-			ID: ctx.ID,
-			Name: ctx.Name,
-			Email: ctx.Email,
-			Phone: ctx.Phone,
-		}
-	}
-
-	usersResponse := &response.FindUsersResponse{
-		Users: list,
-	}
-
-	return usersResponse, nil
+	return *users, nil
 }
 
 // TODO: change return value to entitles.User
@@ -90,9 +71,8 @@ func (pg *PGGormDB) CreateUser(rq *entities.User) (*response.CreateUserResponse,
 		Name:     rq.Name,
 		Email:    rq.Email,
 		Password: rq.Password,
-		Phone:    rq.Phone,
+		Phone: rq.Phone,
 	}
-
 	return response, nil
 }
 
@@ -104,7 +84,7 @@ func (pg *PGGormDB) FindAllTable() ([]*entities.Table, error){
 		return nil, err
 	}
 
-	return tables,nil
+	return tables, nil
 }
 
 
@@ -182,6 +162,21 @@ func (pg *PGGormDB) CreateOrderByID(rq *entities.Order) (*entities.Order, error)
 	return rq, nil
 }
 
+
+func (pg *PGGormDB) DeleteOrderByID(id pgtype.UUID)(error){
+	order := new(entities.Order)
+
+	if err := pg.db.Where("id = ?",id).Find(order).Error; err != nil{
+		return err
+	}
+
+	if err := pg.db.Delete(order).Error; err != nil{
+		return err
+	}
+
+
+	return nil
+}
 func (pg *PGGormDB) FindAllOrderLine()([]*entities.OrderLine, error){
 	olines := new([]*entities.OrderLine)
 
@@ -211,6 +206,7 @@ func (pg *PGGormDB) CreateOrderLine(rq *entities.OrderLine) (*entities.OrderLine
 
 	return rq, nil
 }
+
 
 func (pg *PGGormDB) CreateMenu(rq *entities.Menu) (*entities.Menu, error) {
 	if err := pg.db.Create(rq).Error; err != nil {
@@ -263,6 +259,21 @@ func (pg *PGGormDB) DeleteMenu(id string) error {
 	if err := pg.db.Delete(menu).Error; err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (pg *PGGormDB) DeleteOrderLineByID(id pgtype.UUID) (error){
+	oline := new(entities.OrderLine)
+
+	if err := pg.db.Where("id = ?",id).Find(oline).Error; err != nil{
+		return err
+	}
+
+	if err := pg.db.Delete(oline).Error; err != nil{
+		return err
+	}
+
 
 	return nil
 }

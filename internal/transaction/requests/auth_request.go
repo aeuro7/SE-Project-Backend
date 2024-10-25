@@ -8,7 +8,7 @@ type LoginRequest struct{
 
 type RegisterRequest struct{
     Email    string `json:"email"`
-    Password string `son:"password"`
+    Password string `json:"password"`
     Name     string `json:"name"`
     Phone    string `json:"phone"`
 }
