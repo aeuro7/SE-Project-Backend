@@ -7,6 +7,7 @@ import (
 	"github.com/B1gdawg0/se-project-backend/internal/adapters/rest/handlers"
 	"github.com/B1gdawg0/se-project-backend/internal/infrastructure"
 	"github.com/B1gdawg0/se-project-backend/internal/infrastructure/entities"
+	"github.com/B1gdawg0/se-project-backend/internal/usecases/admin"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/auth"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/order"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/orderline"
@@ -48,7 +49,11 @@ func InitHandler() *rest.Handler{
 	tableService := table.ProvideTableService(tableRepo,orderRepo,oLineRepo)
 	tableHandler := handlers.ProvideTableRestHandler(tableService)
 
-	handler := rest.ProvideHandler(userHandler, authHandler, tableHandler, orderHandler, oLineHandler)
+	adminService := admin.ProvideAdminService(userRepo)
+	adminHandler := handlers.ProvideAdminRestHandler(adminService)
+	adminHandler.InitializeAdminAccount()
+
+	handler := rest.ProvideHandler(userHandler, authHandler, tableHandler, orderHandler, oLineHandler, adminHandler)
 
 	return handler
 }
