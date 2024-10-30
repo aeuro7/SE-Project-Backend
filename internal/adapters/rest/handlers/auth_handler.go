@@ -39,12 +39,7 @@ func (arh *AuthRestHandler) Login(c *fiber.Ctx) error{
 		})
 	}
 
-	return c.JSON(fiber.Map{
-		"message":"Succesful login!",
-		"payload":fiber.Map{
-			"status":response,
-		},
-	})
+	return c.JSON(response)
 
 }
 
@@ -75,10 +70,5 @@ func (arh *AuthRestHandler) Register(c *fiber.Ctx) error{
 		})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"message":"Successful Created",
-		"payload":fiber.Map{
-			"user":user,
-		},
-	})
+	return c.Status(fiber.StatusCreated).JSON(user)
 }
