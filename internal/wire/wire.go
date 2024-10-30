@@ -7,11 +7,13 @@ import (
 	"github.com/B1gdawg0/se-project-backend/internal/adapters/rest/handlers"
 	"github.com/B1gdawg0/se-project-backend/internal/infrastructure"
 	"github.com/B1gdawg0/se-project-backend/internal/infrastructure/entities"
+	"github.com/B1gdawg0/se-project-backend/internal/usecases/admin"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/auth"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/order"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/orderline"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/table"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/user"
+	"github.com/B1gdawg0/se-project-backend/internal/usecases/menu"
 )
 
 func InitHandler() *rest.Handler{
@@ -40,6 +42,10 @@ func InitHandler() *rest.Handler{
 	orderService := order.ProvideOrderService(orderRepo)
 	orderHandler := handlers.ProvideOrderRestHandler(orderService)
 
+	menuRepo := repositories.ProvideMenuRepository(db)
+	menuService := menu.ProvideMenuService(menuRepo)
+	menuHandler := handlers.ProvideMenuRestHandler(menuService)
+  
 	oLineRepo := repositories.ProvideOrderLineRepository(db)
 	oLineService := orderline.ProvideOrderLineService(oLineRepo)
 	oLineHandler := handlers.ProvideOrderLineRestHandler(oLineService)
@@ -48,7 +54,12 @@ func InitHandler() *rest.Handler{
 	tableService := table.ProvideTableService(tableRepo,orderRepo,oLineRepo)
 	tableHandler := handlers.ProvideTableRestHandler(tableService)
 
-	handler := rest.ProvideHandler(userHandler, authHandler, tableHandler, orderHandler, oLineHandler)
+	adminService := admin.ProvideAdminService(userRepo)
+	adminHandler := handlers.ProvideAdminRestHandler(adminService)
+	adminHandler.InitializeAdminAccount()
+
+	handler := rest.ProvideHandler(userHandler, authHandler, tableHandler, orderHandler, oLineHandler, adminHandler, menuHandler)
+
 
 	return handler
 }
