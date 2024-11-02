@@ -41,6 +41,7 @@ type Order struct {
     ID         pgtype.UUID `gorm:"primaryKey;type:uuid"`
     T_ID       string `gorm:"column:t_id"`
     Time       time.Time `gorm:"column:o_time"`
+    Url      string      `gorm:"column:l_urlslip"`
 
     Discount   Discount `gorm:"foreignKey:O_ID;references:ID"`
     Table      Table `gorm:"foreignKey:T_ID;references:ID"`
@@ -54,7 +55,6 @@ type OrderLine struct {
     M_ID     pgtype.UUID `gorm:"column:m_id"`
     Quantity int         `gorm:"column:l_quantity"`
     Price    float32     `gorm:"column:l_price"`
-    Url      string      `gorm:"column:l_urlslip"`
 
     Menu Menu `gorm:"foreignKey:M_ID;references:ID"`
 }

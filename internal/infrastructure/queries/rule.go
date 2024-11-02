@@ -25,6 +25,7 @@ type Database interface{
 	CreateOrderByID(rq *entities.Order) (*entities.Order, error)
 	DeleteOrderByID(id pgtype.UUID) (error)
 	FindOrderLineByID(id pgtype.UUID) (*entities.OrderLine, error)
+	FindOrderLineByOrderID(id pgtype.UUID) ([]*entities.OrderLine, error)
 	FindAllOrderLine()([]*entities.OrderLine, error)
 	CreateOrderLine(rq *entities.OrderLine) (*entities.OrderLine, error)
 
