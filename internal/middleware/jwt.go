@@ -8,8 +8,7 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-
-func CheckJWT(c *fiber.Ctx) error{
+func CheckJWT(c *fiber.Ctx) error {
 
 	tokenStr := c.Get("Authorization")
 
@@ -43,5 +42,20 @@ func CheckJWT(c *fiber.Ctx) error{
 
 	}
 
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "User ID not found in token",
+		})
+	}
+	userID, ok := claims["user_id"].(string)
+	if !ok {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "User ID not found in token",
+		})
+	}
+	c.Locals("user_id", userID)
+
 	return c.Next()
+
 }
