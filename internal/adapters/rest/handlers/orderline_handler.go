@@ -66,6 +66,33 @@ func (olrh *OrderLineRestHandler) GetOrderLineByID(c *fiber.Ctx) error{
 	})
 }
 
+func (olrh *OrderLineRestHandler) GetOrderLinesByOrderID(c *fiber.Ctx) error{
+	id, err := utils.StringToUUID(c.Params("id"))
+
+	if err != nil{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message":"Bad request",
+			"error":err.Error(),
+		})
+	}
+
+	response, err := olrh.usecase.FindOrderLinesByOrderID(*id)
+
+	if err != nil{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message":"Internal server error",
+			"error":err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message":"Succesful get orderlines by orderID",
+		"payload":fiber.Map{
+			"orderline":response,
+		},
+	})
+}
+
 func (olrh *OrderLineRestHandler) CreateOrderLine(c *fiber.Ctx) error{
 	rq := new(requests.CreateOrderLineRequest)
 

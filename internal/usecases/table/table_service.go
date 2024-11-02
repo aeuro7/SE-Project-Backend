@@ -147,7 +147,7 @@ func (ts *TableService) UpdateTableByID(rq *requests.UpdateTableRequest) (*respo
 		if err != nil {
 			return nil, err
 		}
-
+// afadf
 		m_id, quantity, price, err := ts.parseOrderLine(rq)
 		if err != nil {
 			ts.rollbackOrder(order.ID)
@@ -161,7 +161,6 @@ func (ts *TableService) UpdateTableByID(rq *requests.UpdateTableRequest) (*respo
 			M_ID:     *m_id,
 			Quantity: quantity,
 			Price:    float32(price),
-			Url:      rq.OrderLine.Url,
 		}
 
 		oline, err := ts.olineRepo.CreateOrderLine(olinePayload)
@@ -242,7 +241,6 @@ func (ts *TableService) updateTableWithOrderNOrderLine(order *entities.Order, ol
 			M_ID:     convert.UUIDToString(oline.M_ID),
 			Quantity: fmt.Sprintf("%d", oline.Quantity),
 			Price:    fmt.Sprintf("%.2f", oline.Price),
-			Url:      oline.Url,
 		},
 	}, nil
 }
