@@ -175,7 +175,7 @@ func (pg *PGGormDB) DeleteOrderByID(id pgtype.UUID) error {
 func (pg *PGGormDB) FindAllOrderLine() ([]*entities.OrderLine, error) {
 	olines := new([]*entities.OrderLine)
 
-	if err := pg.db.Find(olines).Error; err != nil {
+	if err := pg.db.Preload("Menu").Find(olines).Error; err != nil {
 		return nil, err
 	}
 
@@ -184,10 +184,20 @@ func (pg *PGGormDB) FindAllOrderLine() ([]*entities.OrderLine, error) {
 
 func (pg *PGGormDB) FindOrderLineByID(id pgtype.UUID) (*entities.OrderLine, error) {
 	oline := new(entities.OrderLine)
-	if err := pg.db.First(oline, "id = ?", id).Error; err != nil {
+	if err := pg.db.Preload("Menu").First(oline, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return oline, nil
+}
+
+func (pg *PGGormDB) FindOrderLineByOrderID(id pgtype.UUID) ([]*entities.OrderLine, error) {
+	olines := new([]*entities.OrderLine)
+
+	if err := pg.db.Preload("Menu").Where("o_id = ?", id).Find(olines).Error; err != nil {
+		return nil, err
+	}
+
+	return *olines, nil
 }
 
 func (pg *PGGormDB) CreateOrderLine(rq *entities.OrderLine) (*entities.OrderLine, error) {

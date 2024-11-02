@@ -26,6 +26,10 @@ func (olr *OrderLineRepositoryImpl) FindOrderLineByID(id pgtype.UUID) (*entities
 	return olr.Queries.FindOrderLineByID(id)
 }
 
+func (olr *OrderLineRepositoryImpl) FindOrderLinesByOrderID(id pgtype.UUID) ([]*entities.OrderLine, error) {
+	return olr.Queries.FindOrderLineByOrderID(id)
+}
+
 func (olr *OrderLineRepositoryImpl) CreateOrderLine(rq *entities.OrderLine) (*entities.OrderLine, error) {
 	return olr.Queries.CreateOrderLine(rq)
 }

@@ -96,7 +96,6 @@ func (mrh *MenuRestHandler) CreateMenu(c *fiber.Ctx) error {
 		Description: rq.Description,
 		Url:         rq.Url,
 	}
-
 	response, err := mrh.usecase.CreateMenu(payload)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
