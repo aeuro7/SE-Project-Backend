@@ -15,6 +15,7 @@ import (
 
 type OrderLineUseCase interface {
 	FindOrderLineByID(id pgtype.UUID) (*response.GetOrderLineResponse, error)
+	FindOrderLinesByOrderID(id pgtype.UUID) (*response.GetOrderLinesResponse, error)
 	FindAllOrderLine() (*response.GetOrderLinesResponse, error)
 	CreateOrderLine(*entities.OrderLine) (*response.CreateOrderLineResponse, error)
 }
@@ -32,7 +33,7 @@ func ProvideOrderLineService(repo OrderLineRepository) OrderLineUseCase {
 func (ols *OrderLineService) FindAllOrderLine() (*response.GetOrderLinesResponse, error) {
 	all, err := ols.repo.FindAllOrderLine()
 
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 
@@ -40,8 +41,7 @@ func (ols *OrderLineService) FindAllOrderLine() (*response.GetOrderLinesResponse
 		Olines: make([]response.GetOrderLineResponse, 0),
 	}
 
-
-	for _, obj := range(all) {
+	for _, obj := range all {
 		list.Olines = append(list.Olines, response.GetOrderLineResponse{
 			ID:       convert.UUIDToString(obj.ID),
 			Time:     obj.Time.Format("2006-01-02 15:04:05"),
@@ -49,19 +49,23 @@ func (ols *OrderLineService) FindAllOrderLine() (*response.GetOrderLinesResponse
 			M_ID:     convert.UUIDToString(obj.M_ID),
 			Quantity: fmt.Sprintf("%d", obj.Quantity),
 			Price:    fmt.Sprintf("%.2f", obj.Price),
-			Url:      obj.Url,
+			Menu: response.GetMenuResponse{
+				ID:          obj.Menu.ID,
+				Description: obj.Menu.Description,
+				Price:       obj.Menu.Price,
+				Url:         obj.Menu.Url,
+			},
 		})
 	}
-
 
 	return &list, nil
 }
 
 func (ols *OrderLineService) FindOrderLineByID(id pgtype.UUID) (*response.GetOrderLineResponse, error) {
-	orderline,err := ols.repo.FindOrderLineByID(id)
+	orderline, err := ols.repo.FindOrderLineByID(id)
 
-	if err != nil{
-		return nil ,err
+	if err != nil {
+		return nil, err
 	}
 
 	return &response.GetOrderLineResponse{
@@ -71,8 +75,44 @@ func (ols *OrderLineService) FindOrderLineByID(id pgtype.UUID) (*response.GetOrd
 		M_ID:     convert.UUIDToString(orderline.M_ID),
 		Quantity: fmt.Sprintf("%d", orderline.Quantity),
 		Price:    fmt.Sprintf("%.2f", orderline.Price),
-		Url:      orderline.Url,
-	},nil
+		Menu: response.GetMenuResponse{
+			ID:          orderline.Menu.ID,
+			Description: orderline.Menu.Description,
+			Price:       orderline.Menu.Price,
+			Url:         orderline.Menu.Url,
+		},
+	}, nil
+}
+
+func (ols *OrderLineService) FindOrderLinesByOrderID(id pgtype.UUID) (*response.GetOrderLinesResponse, error) {
+	olines, err := ols.repo.FindOrderLinesByOrderID(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	list := response.GetOrderLinesResponse{
+		Olines: make([]response.GetOrderLineResponse, 0),
+	}
+
+	for _, obj := range olines {
+		list.Olines = append(list.Olines, response.GetOrderLineResponse{
+			ID:       convert.UUIDToString(obj.ID),
+			Time:     obj.Time.Format("2006-01-02 15:04:05"),
+			O_ID:     convert.UUIDToString(obj.O_ID),
+			M_ID:     convert.UUIDToString(obj.M_ID),
+			Quantity: fmt.Sprintf("%d", obj.Quantity),
+			Price:    fmt.Sprintf("%.2f", obj.Price),
+			Menu: response.GetMenuResponse{
+                ID:          obj.Menu.ID,
+                Description: obj.Menu.Description,
+                Price:       obj.Menu.Price,
+                Url:         obj.Menu.Url,
+            },
+		})
+	}
+
+	return &list, nil
 }
 
 func (ols *OrderLineService) CreateOrderLine(rq *entities.OrderLine) (*response.CreateOrderLineResponse, error) {
@@ -80,11 +120,11 @@ func (ols *OrderLineService) CreateOrderLine(rq *entities.OrderLine) (*response.
 
 	selected, err := ols.repo.FindOrderLineByID(rq.ID)
 
-	if err != nil && err != gorm.ErrRecordNotFound{
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}
 
-	if selected != nil && selected.ID == rq.ID{
+	if selected != nil && selected.ID == rq.ID {
 		return nil, errors.New("order already exists")
 	}
 
@@ -103,6 +143,5 @@ func (ols *OrderLineService) CreateOrderLine(rq *entities.OrderLine) (*response.
 		M_ID:     convert.UUIDToString(orderline.M_ID),
 		Quantity: fmt.Sprintf("%d", orderline.Quantity),
 		Price:    fmt.Sprintf("%.2f", orderline.Price),
-		Url:      orderline.Url,
 	}, nil
 }

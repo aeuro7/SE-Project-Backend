@@ -5,5 +5,4 @@ type CreateOrderLineRequest struct{
     M_ID     string `json:"m_id"`
     Quantity string    `json:"quantity"`
     Price    string `json:"price"`
-    Url      string    `json:"urlslip"`
 }

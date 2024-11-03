@@ -25,6 +25,7 @@ type Database interface{
 	CreateOrderByID(rq *entities.Order) (*entities.Order, error)
 	DeleteOrderByID(id pgtype.UUID) (error)
 	FindOrderLineByID(id pgtype.UUID) (*entities.OrderLine, error)
+	FindOrderLineByOrderID(id pgtype.UUID) ([]*entities.OrderLine, error)
 	FindAllOrderLine()([]*entities.OrderLine, error)
 	CreateOrderLine(rq *entities.OrderLine) (*entities.OrderLine, error)
 
@@ -33,6 +34,13 @@ type Database interface{
 	FindAllMenu() ([]*entities.Menu, error)
 	UpdateMenu(rq *entities.Menu) (*entities.Menu, error)
 	DeleteMenu(id string) (error)
+
+	CreateIgLine(rq *entities.IGLine) (*entities.IGLine, error)
+	FindAllIgLine() ([]*entities.IGLine, error)
+	
+	CreateMusicLine(rq *entities.MusicLine) (*entities.MusicLine, error)
+	FindAllMusicLine() ([]*entities.MusicLine, error)
+
 
 	FindAllDiscount()([]*entities.Discount, error)
 	FindDiscountByID(id pgtype.UUID) (*entities.Discount, error)

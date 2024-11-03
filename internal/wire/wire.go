@@ -9,6 +9,9 @@ import (
 	"github.com/B1gdawg0/se-project-backend/internal/infrastructure/entities"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/admin"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/auth"
+	"github.com/B1gdawg0/se-project-backend/internal/usecases/igline"
+	"github.com/B1gdawg0/se-project-backend/internal/usecases/menu"
+	"github.com/B1gdawg0/se-project-backend/internal/usecases/musicline"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/order"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/orderline"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/table"
@@ -60,11 +63,20 @@ func InitHandler() *rest.Handler{
 	adminHandler := handlers.ProvideAdminRestHandler(adminService)
 	adminHandler.InitializeAdminAccount()
 
+	igLineRepo := repositories.ProvideIgLineRepository(db)
+	igLineService := igline.ProvideIgLineService(igLineRepo)
+	igLineHandler := handlers.ProvideIglineHandler(igLineService)
+
+	musicLineRepo := repositories.ProvideMusicLineRepository(db)
+	musicLineService := musicline.ProvideMusicService(musicLineRepo)
+	musicLineHandler := handlers.ProvideMusicLineHandler(musicLineService)
+
+
 	discountRepo := repositories.ProvideDiscountRepository(db)
 	discountService := discount.ProvideDiscountService(discountRepo)
 	discountHandler := handlers.ProvideDiscountRestHandler(discountService)
 
-	handler := rest.ProvideHandler(userHandler, authHandler, tableHandler, orderHandler, oLineHandler, adminHandler, menuHandler, discountHandler)
+	handler := rest.ProvideHandler(userHandler, authHandler, tableHandler, orderHandler, oLineHandler, adminHandler, menuHandler, igLineHandler, musicLineHandler, discountHandler)
 
 	return handler
 }

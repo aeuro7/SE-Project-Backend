@@ -1,7 +1,6 @@
 package queries
 
 import (
-
 	"github.com/B1gdawg0/se-project-backend/internal/infrastructure/entities"
 	"github.com/B1gdawg0/se-project-backend/internal/transaction/response"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -18,7 +17,7 @@ func New(db *gorm.DB) Database {
 	}
 }
 
-func (pg *PGGormDB) FindUserByID(id pgtype.UUID) (*entities.User, error)  {
+func (pg *PGGormDB) FindUserByID(id pgtype.UUID) (*entities.User, error) {
 	user := new(entities.User)
 
 	if err := pg.db.Where("id = ?", id).Find(user); err.Error != nil {
@@ -29,7 +28,7 @@ func (pg *PGGormDB) FindUserByID(id pgtype.UUID) (*entities.User, error)  {
 }
 
 // TODO: change return value to entitles.User
-func (pg *PGGormDB) FindUserByEmail(email string) (*entities.User, error)  {
+func (pg *PGGormDB) FindUserByEmail(email string) (*entities.User, error) {
 	user := new(entities.User)
 
 	if err := pg.db.Where("c_email = ?", email).Find(user); err.Error != nil {
@@ -41,7 +40,7 @@ func (pg *PGGormDB) FindUserByEmail(email string) (*entities.User, error)  {
 func (pg *PGGormDB) FindUserByPhone(phone string) (*entities.User, error) {
 	user := new(entities.User)
 
-	if err := pg.db.Where("c_phone = ?", phone).Find(user); err.Error != nil{
+	if err := pg.db.Where("c_phone = ?", phone).Find(user); err.Error != nil {
 		return nil, err.Error
 	}
 
@@ -71,13 +70,12 @@ func (pg *PGGormDB) CreateUser(rq *entities.User) (*response.CreateUserResponse,
 		Name:     rq.Name,
 		Email:    rq.Email,
 		Password: rq.Password,
-		Phone: rq.Phone,
+		Phone:    rq.Phone,
 	}
 	return response, nil
 }
 
-
-func (pg *PGGormDB) FindAllTable() ([]*entities.Table, error){
+func (pg *PGGormDB) FindAllTable() ([]*entities.Table, error) {
 	var tables []*entities.Table
 
 	if err := pg.db.Find(&tables).Error; err != nil {
@@ -87,9 +85,8 @@ func (pg *PGGormDB) FindAllTable() ([]*entities.Table, error){
 	return tables, nil
 }
 
-
-func (pg *PGGormDB) CreateTable(rq *entities.Table) (*entities.Table, error){
-	if err := pg.db.Create(rq).Error; err != nil{
+func (pg *PGGormDB) CreateTable(rq *entities.Table) (*entities.Table, error) {
+	if err := pg.db.Create(rq).Error; err != nil {
 		return nil, err
 	}
 
@@ -162,51 +159,54 @@ func (pg *PGGormDB) CreateOrderByID(rq *entities.Order) (*entities.Order, error)
 	return rq, nil
 }
 
-
-func (pg *PGGormDB) DeleteOrderByID(id pgtype.UUID)(error){
+func (pg *PGGormDB) DeleteOrderByID(id pgtype.UUID) error {
 	order := new(entities.Order)
 
-	if err := pg.db.Where("id = ?",id).Find(order).Error; err != nil{
+	if err := pg.db.Where("id = ?", id).Find(order).Error; err != nil {
 		return err
 	}
 
-	if err := pg.db.Delete(order).Error; err != nil{
+	if err := pg.db.Delete(order).Error; err != nil {
 		return err
 	}
-
 
 	return nil
 }
-func (pg *PGGormDB) FindAllOrderLine()([]*entities.OrderLine, error){
+func (pg *PGGormDB) FindAllOrderLine() ([]*entities.OrderLine, error) {
 	olines := new([]*entities.OrderLine)
 
-	if err := pg.db.Find(olines).Error; err!= nil{
+	if err := pg.db.Preload("Menu").Find(olines).Error; err != nil {
 		return nil, err
 	}
-
-	
 
 	return *olines, nil
 }
 
-
-func (pg *PGGormDB) FindOrderLineByID(id pgtype.UUID) (*entities.OrderLine, error){
+func (pg *PGGormDB) FindOrderLineByID(id pgtype.UUID) (*entities.OrderLine, error) {
 	oline := new(entities.OrderLine)
-	if err := pg.db.First(oline, "id = ?",id).Error; err != nil{
+	if err := pg.db.Preload("Menu").First(oline, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 	return oline, nil
 }
 
+func (pg *PGGormDB) FindOrderLineByOrderID(id pgtype.UUID) ([]*entities.OrderLine, error) {
+	olines := new([]*entities.OrderLine)
 
-func (pg *PGGormDB) CreateOrderLine(rq *entities.OrderLine) (*entities.OrderLine, error){
-	if err := pg.db.Create(rq).Error; err != nil{
+	if err := pg.db.Preload("Menu").Where("o_id = ?", id).Find(olines).Error; err != nil {
+		return nil, err
+	}
+
+	return *olines, nil
+}
+
+func (pg *PGGormDB) CreateOrderLine(rq *entities.OrderLine) (*entities.OrderLine, error) {
+	if err := pg.db.Create(rq).Error; err != nil {
 		return nil, err
 	}
 
 	return rq, nil
 }
-
 
 func (pg *PGGormDB) CreateMenu(rq *entities.Menu) (*entities.Menu, error) {
 	if err := pg.db.Create(rq).Error; err != nil {
@@ -263,20 +263,57 @@ func (pg *PGGormDB) DeleteMenu(id string) error {
 	return nil
 }
 
-func (pg *PGGormDB) DeleteOrderLineByID(id pgtype.UUID) (error){
+func (pg *PGGormDB) DeleteOrderLineByID(id pgtype.UUID) error {
 	oline := new(entities.OrderLine)
 
-	if err := pg.db.Where("id = ?",id).Find(oline).Error; err != nil{
+	if err := pg.db.Where("id = ?", id).Find(oline).Error; err != nil {
 		return err
 	}
 
-	if err := pg.db.Delete(oline).Error; err != nil{
+	if err := pg.db.Delete(oline).Error; err != nil {
 		return err
 	}
-
 
 	return nil
 }
+
+func (pg *PGGormDB) CreateIgLine(rq *entities.IGLine) (*entities.IGLine, error) {
+
+	if err := pg.db.Create(rq); err.Error != nil {
+		return nil, err.Error
+	}
+
+	return rq, nil
+}
+
+func (pg *PGGormDB) FindAllIgLine() ([]*entities.IGLine, error) {
+	var igLineLs []*entities.IGLine
+
+	if err := pg.db.Find(&igLineLs); err.Error != nil {
+		return nil, err.Error
+	}
+
+	return igLineLs, nil
+}
+
+func (pg *PGGormDB) CreateMusicLine(rq *entities.MusicLine) (*entities.MusicLine, error) {
+	if err := pg.db.Create(rq).Error; err != nil {
+		return nil, err
+	}
+
+	return rq, nil
+}
+
+func (pg *PGGormDB) FindAllMusicLine() ([]*entities.MusicLine, error) {
+	var musicLines []*entities.MusicLine
+
+	if err := pg.db.Find(&musicLines).Error; err != nil {
+		return nil, err
+	}
+
+	return musicLines, nil
+}
+
 
 func (pg *PGGormDB) CreateDiscount(rq *entities.Discount) (*entities.Discount, error) {
 	if err := pg.db.Create(rq).Error; err != nil {

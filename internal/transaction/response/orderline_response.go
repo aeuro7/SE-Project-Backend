@@ -7,7 +7,7 @@ type CreateOrderLineResponse struct{
     M_ID     string `json:"m_id"`
     Quantity string `json:"l_quantity"`
     Price    string `json:"l_price"`
-    Url      string `json:"l_urlslip"`
+    Menu     GetMenuResponse `json:"menu"`
 }
 
 
