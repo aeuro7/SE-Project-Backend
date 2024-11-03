@@ -33,4 +33,8 @@ type Database interface{
 	FindAllMenu() ([]*entities.Menu, error)
 	UpdateMenu(rq *entities.Menu) (*entities.Menu, error)
 	DeleteMenu(id string) (error)
+
+	FindAllDiscount()([]*entities.Discount, error)
+	FindDiscountByID(id pgtype.UUID) (*entities.Discount, error)
+	CreateDiscount(rq *entities.Discount) (*entities.Discount, error)
 } 

@@ -14,6 +14,7 @@ func RegisterApiRouter(app *fiber.App, rqHandler *rest.Handler){
 	menu := app.Group("/menu")
 	orderLine := app.Group("/order-lines")
 	admin := app.Group("/admin")
+	discount := app.Group("/discount")
 
 	auth.Post("/login", rqHandler.Auth.Login)
 	auth.Post("/register", rqHandler.Auth.Register)
@@ -59,4 +60,7 @@ func RegisterApiRouter(app *fiber.App, rqHandler *rest.Handler){
 	admin.Get("/order-lines", rqHandler.OrderLine.GetOrderLines)
 	admin.Get("/order-lines/id=:id", rqHandler.OrderLine.GetOrderLineByID)
 
+	discount.Get("", rqHandler.Discount.GetAllDiscount)
+	discount.Get("/id=:id", rqHandler.Discount.GetDiscountByID)
+	discount.Post("", rqHandler.Discount.CreateDiscount)
 }

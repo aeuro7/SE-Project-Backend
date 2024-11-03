@@ -14,6 +14,7 @@ import (
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/table"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/user"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/menu"
+	"github.com/B1gdawg0/se-project-backend/internal/usecases/discount"
 )
 
 func InitHandler() *rest.Handler{
@@ -28,6 +29,7 @@ func InitHandler() *rest.Handler{
         &entities.Order{},
         &entities.OrderLine{},
         &entities.Menu{},
+		&entities.Discount{},
 		); 
 		err != nil{ panic("Can't Automigrate Database: Auto shutdown...")}
 
@@ -58,8 +60,11 @@ func InitHandler() *rest.Handler{
 	adminHandler := handlers.ProvideAdminRestHandler(adminService)
 	adminHandler.InitializeAdminAccount()
 
-	handler := rest.ProvideHandler(userHandler, authHandler, tableHandler, orderHandler, oLineHandler, adminHandler, menuHandler)
+	discountRepo := repositories.ProvideDiscountRepository(db)
+	discountService := discount.ProvideDiscountService(discountRepo)
+	discountHandler := handlers.ProvideDiscountRestHandler(discountService)
 
+	handler := rest.ProvideHandler(userHandler, authHandler, tableHandler, orderHandler, oLineHandler, adminHandler, menuHandler, discountHandler)
 
 	return handler
 }
