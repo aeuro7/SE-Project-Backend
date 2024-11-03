@@ -34,4 +34,11 @@ type Database interface{
 	FindAllMenu() ([]*entities.Menu, error)
 	UpdateMenu(rq *entities.Menu) (*entities.Menu, error)
 	DeleteMenu(id string) (error)
+
+	CreateIgLine(rq *entities.IGLine) (*entities.IGLine, error)
+	FindAllIgLine() ([]*entities.IGLine, error)
+	
+	CreateMusicLine(rq *entities.MusicLine) (*entities.MusicLine, error)
+	FindAllMusicLine() ([]*entities.MusicLine, error)
+
 } 
