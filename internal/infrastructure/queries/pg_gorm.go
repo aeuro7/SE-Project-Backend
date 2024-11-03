@@ -276,3 +276,40 @@ func (pg *PGGormDB) DeleteOrderLineByID(id pgtype.UUID) error {
 
 	return nil
 }
+
+func (pg *PGGormDB) CreateIgLine(rq *entities.IGLine) (*entities.IGLine, error) {
+
+	if err := pg.db.Create(rq); err.Error != nil {
+		return nil, err.Error
+	}
+
+	return rq, nil
+}
+
+func (pg *PGGormDB) FindAllIgLine() ([]*entities.IGLine, error) {
+	var igLineLs []*entities.IGLine
+
+	if err := pg.db.Find(&igLineLs); err.Error != nil {
+		return nil, err.Error
+	}
+
+	return igLineLs, nil
+}
+
+func (pg *PGGormDB) CreateMusicLine(rq *entities.MusicLine) (*entities.MusicLine, error) {
+	if err := pg.db.Create(rq).Error; err != nil {
+		return nil, err
+	}
+
+	return rq, nil
+}
+
+func (pg *PGGormDB) FindAllMusicLine() ([]*entities.MusicLine, error) {
+	var musicLines []*entities.MusicLine
+
+	if err := pg.db.Find(&musicLines).Error; err != nil {
+		return nil, err
+	}
+
+	return musicLines, nil
+}
