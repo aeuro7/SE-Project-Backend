@@ -139,6 +139,7 @@ func (ts *TableService) UpdateTableByID(rq *requests.UpdateTableRequest) (*respo
 	if exist.Status == "A" && rq.Status != "A" {
 		orderPayload := &entities.Order{
 			ID:   utils.GenerateUUID(),
+			Url:  rq.O_URL,
 			T_ID: exist.ID,
 			Time: time.Now(),
 		}
@@ -147,7 +148,7 @@ func (ts *TableService) UpdateTableByID(rq *requests.UpdateTableRequest) (*respo
 		if err != nil {
 			return nil, err
 		}
-// afadf
+
 		m_id, quantity, price, err := ts.parseOrderLine(rq)
 		if err != nil {
 			ts.rollbackOrder(order.ID)
@@ -233,6 +234,7 @@ func (ts *TableService) updateTableWithOrderNOrderLine(order *entities.Order, ol
 			ID:   convert.UUIDToString(order.ID),
 			T_ID: order.T_ID,
 			Time: order.Time.Format("2006-01-02 15:04:05"),
+			Url: order.Url,
 		},
 		OrderLine: response.CreateOrderLineResponse{
 			ID:       convert.UUIDToString(oline.ID),
