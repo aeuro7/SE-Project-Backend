@@ -313,3 +313,28 @@ func (pg *PGGormDB) FindAllMusicLine() ([]*entities.MusicLine, error) {
 
 	return musicLines, nil
 }
+
+func (pg *PGGormDB) CreateDiscount(rq *entities.Discount) (*entities.Discount, error) {
+	if err := pg.db.Create(rq).Error; err != nil {
+		return nil, err
+	}
+	return rq, nil
+}
+
+func (pg *PGGormDB) FindDiscountByID(id pgtype.UUID) (*entities.Discount, error) {
+	Discount := new(entities.Discount)
+	if err := pg.db.Where("id = ?", id).Find(Discount).Error; err != nil {
+		return nil, err
+	}
+	return Discount, nil
+}
+
+func (pg *PGGormDB) FindAllDiscount() ([]*entities.Discount, error) {
+	var Discounts []*entities.Discount
+
+	if err := pg.db.Find(&Discounts).Error; err != nil {
+		return nil, err
+	}
+
+	return Discounts, nil
+}
