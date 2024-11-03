@@ -21,6 +21,7 @@ func RegisterApiRouter(app *fiber.App, rqHandler *rest.Handler) {
 	auth.Post("/register", rqHandler.Auth.Register)
 
 	user.Use(middleware.CheckJWT)
+	
 
 	user.Get("", rqHandler.User.GetUsers)
 	user.Get("/id=:id", rqHandler.User.GetUserByID)
