@@ -16,7 +16,7 @@ func RegisterApiRouter(app *fiber.App, rqHandler *rest.Handler) {
 	admin := app.Group("/admin")
 	igLine := app.Group("/ig-lines", middleware.CheckJWT)
 	musicLine := app.Group("/music-lines", middleware.CheckJWT)
-	discount := app.Group("/discount")
+	discount := app.Group("/discounts")
 
 	auth.Post("/login", rqHandler.Auth.Login)
 	auth.Post("/register", rqHandler.Auth.Register)
@@ -69,6 +69,7 @@ func RegisterApiRouter(app *fiber.App, rqHandler *rest.Handler) {
 
 	musicLine.Post("", rqHandler.Musicline.CreateMusicLine)
 	musicLine.Get("", rqHandler.Musicline.FindAllMusicLine)
+
 	discount.Get("", rqHandler.Discount.GetAllDiscount)
 	discount.Get("/id=:id", rqHandler.Discount.GetDiscountByID)
 	discount.Post("", rqHandler.Discount.CreateDiscount)

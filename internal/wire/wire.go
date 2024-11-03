@@ -16,7 +16,6 @@ import (
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/orderline"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/table"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/user"
-	"github.com/B1gdawg0/se-project-backend/internal/usecases/menu"
 	"github.com/B1gdawg0/se-project-backend/internal/usecases/discount"
 )
 
@@ -75,6 +74,7 @@ func InitHandler() *rest.Handler{
 	discountRepo := repositories.ProvideDiscountRepository(db)
 	discountService := discount.ProvideDiscountService(discountRepo)
 	discountHandler := handlers.ProvideDiscountRestHandler(discountService)
+
 
 	handler := rest.ProvideHandler(userHandler, authHandler, tableHandler, orderHandler, oLineHandler, adminHandler, menuHandler, igLineHandler, musicLineHandler, discountHandler)
 

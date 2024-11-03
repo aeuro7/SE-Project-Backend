@@ -41,8 +41,8 @@ type Database interface{
 	CreateMusicLine(rq *entities.MusicLine) (*entities.MusicLine, error)
 	FindAllMusicLine() ([]*entities.MusicLine, error)
 
-
 	FindAllDiscount()([]*entities.Discount, error)
 	FindDiscountByID(id pgtype.UUID) (*entities.Discount, error)
 	CreateDiscount(rq *entities.Discount) (*entities.Discount, error)
+
 } 

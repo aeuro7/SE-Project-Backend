@@ -17,8 +17,7 @@ type Handler struct {
 	Discount *handlers.DiscountRestHandler
 }
 
-
-func ProvideHandler(user *handlers.UserRestHandler, auth *handlers.AuthRestHandler, table *handlers.TableRestHandler, order *handlers.OrderRestHandler, orderline *handlers.OrderLineRestHandler, admin *handlers.AdminRestHandler,  menu *handlers.MenuRestHandler) *Handler{
+func ProvideHandler(user *handlers.UserRestHandler, auth *handlers.AuthRestHandler, table *handlers.TableRestHandler, order *handlers.OrderRestHandler, orderline *handlers.OrderLineRestHandler, admin *handlers.AdminRestHandler, menu *handlers.MenuRestHandler, igLine *handlers.IgLineHandler, musicLine *handlers.MusicLineHandler, discount *handlers.DiscountRestHandler) *Handler {
 	return &Handler{
 		User:      user,
 		Auth:      auth,
