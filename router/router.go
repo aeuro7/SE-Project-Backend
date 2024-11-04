@@ -38,6 +38,7 @@ func RegisterApiRouter(app *fiber.App, rqHandler *rest.Handler) {
 
 	order.Get("", rqHandler.Order.GetAllOrder)
 	order.Get("/id=:id", rqHandler.Order.GetOrderByID)
+	order.Get("/t_id=:id", rqHandler.Order.GetOrderByTableID)
 	order.Post("", rqHandler.Order.CreateOrderByID)
 	order.Post("/w-olines", rqHandler.Order.CreateOrderWithOrderLines)
 

@@ -67,6 +67,26 @@ func (orh *OrderRestHandler) GetOrderByID(c *fiber.Ctx) error{
 	})
 }
 
+func (orh *OrderRestHandler) GetOrderByTableID(c *fiber.Ctx) error{
+	idStr := c.Params("id")
+	
+	response, err := orh.usecase.FindOrderByTableID(idStr)
+
+	if err != nil{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message":"Internal server error",
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message":"Succesful create order",
+		"payload":fiber.Map{
+			"order":response,
+		},
+	})
+}
+
 
 func (orh *OrderRestHandler) CreateOrderByID(c *fiber.Ctx) error{
 	rq := new(requests.CreateOrderRequest)

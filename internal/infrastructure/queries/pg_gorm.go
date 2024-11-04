@@ -156,6 +156,15 @@ func (pg *PGGormDB) FindOrderByID(id pgtype.UUID) (*entities.Order, error) {
 	return order, nil
 }
 
+func (pg *PGGormDB) FindOrderByTableID(id string) ([]entities.Order, error) {
+	order := []entities.Order{}
+	if err := pg.db.Preload("OrderLines").Find(&order, "t_id = ?", id).Error; err != nil {
+		return nil, err
+	}
+
+	return order, nil
+}
+
 func (pg *PGGormDB) CreateOrderByID(rq *entities.Order) (*entities.Order, error) {
 	if err := pg.db.Create(rq).Error; err != nil {
 		return nil, err

@@ -33,3 +33,7 @@ func (ori *OrderReposityImpl) CreateOrderByID(rq *entities.Order) (*entities.Ord
 func (ori *OrderReposityImpl) DeleteOrderByID(id pgtype.UUID) error {
 	return ori.Queries.DeleteOrderByID(id)
 }
+
+func (ori *OrderReposityImpl) FindOrderByTableID(id string) ([]entities.Order, error) {
+	return ori.Queries.FindOrderByTableID(id)
+}
