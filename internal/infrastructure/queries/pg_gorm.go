@@ -140,7 +140,7 @@ func (pg *PGGormDB) DeleteTableByID(id string) error {
 func (pg *PGGormDB) FindAllOrder() ([]*entities.Order, error) {
 	orders := new([]*entities.Order)
 
-	if err := pg.db.Preload("OrderLines").Find(orders).Error; err != nil {
+	if err := pg.db.Preload("OrderLines.Menu").Find(orders).Error; err != nil {
 		return nil, err
 	}
 
@@ -149,7 +149,7 @@ func (pg *PGGormDB) FindAllOrder() ([]*entities.Order, error) {
 
 func (pg *PGGormDB) FindOrderByID(id pgtype.UUID) (*entities.Order, error) {
 	order := new(entities.Order)
-	if err := pg.db.Preload("OrderLines").First(order, "id = ?", id).Error; err != nil {
+	if err := pg.db.Preload("OrderLines.Menu").First(order, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 
@@ -158,7 +158,7 @@ func (pg *PGGormDB) FindOrderByID(id pgtype.UUID) (*entities.Order, error) {
 
 func (pg *PGGormDB) FindOrderByTableID(id string) ([]entities.Order, error) {
 	order := []entities.Order{}
-	if err := pg.db.Preload("OrderLines").Find(&order, "t_id = ?", id).Error; err != nil {
+	if err := pg.db.Preload("OrderLines.Menu").Find(&order, "t_id = ?", id).Error; err != nil {
 		return nil, err
 	}
 
