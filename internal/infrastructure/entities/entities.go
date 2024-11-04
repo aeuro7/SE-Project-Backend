@@ -39,10 +39,10 @@ type Table struct {
 }
 
 type Order struct {
-	ID   pgtype.UUID `gorm:"primaryKey;type:uuid"`
-	T_ID string      `gorm:"column:t_id"`
-	Time time.Time   `gorm:"column:o_time"`
-	Url  string      `gorm:"column:l_urlslip"`
+    ID         pgtype.UUID `gorm:"primaryKey;type:uuid"`
+    T_ID       string `gorm:"column:t_id"`
+    Time       time.Time `gorm:"column:o_time"`
+    Url      string      `gorm:"column:o_url"`
 
 	Discount   Discount    `gorm:"foreignKey:O_ID;references:ID"`
 	Table      Table       `gorm:"foreignKey:T_ID;references:ID"`

@@ -98,3 +98,22 @@ func (orh *OrderRestHandler) CreateOrderByID(c *fiber.Ctx) error{
 		},
 	})
 }
+
+
+func (orh *OrderRestHandler) CreateOrderWithOrderLines(c *fiber.Ctx) error{
+	rq := new(requests.CreateOrderWithOrderLinesRequest)
+
+	if err := c.BodyParser(rq);err != nil{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid input"})
+	}
+
+	res, err := orh.usecase.CreateOrderWithOrderLines(rq)
+
+	if err != nil{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.JSON(res)
+}
