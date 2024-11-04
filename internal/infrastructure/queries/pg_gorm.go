@@ -264,17 +264,20 @@ func (pg *PGGormDB) DeleteMenu(id string) error {
 }
 
 func (pg *PGGormDB) DeleteOrderLineByID(id pgtype.UUID) error {
-	oline := new(entities.OrderLine)
+    if err := pg.db.Where("id = ?", id).Delete(&entities.OrderLine{}).Error; err != nil {
+        return err
+    }
 
-	if err := pg.db.Where("id = ?", id).Find(oline).Error; err != nil {
-		return err
-	}
+    order := new(entities.Order)
+    if err := pg.db.Where("id = ?", id).Find(order).Error; err != nil {
+        return err
+    }
 
-	if err := pg.db.Delete(oline).Error; err != nil {
-		return err
-	}
+    if err := pg.db.Delete(order).Error; err != nil {
+        return err
+    }
 
-	return nil
+    return nil
 }
 
 func (pg *PGGormDB) CreateIgLine(rq *entities.IGLine) (*entities.IGLine, error) {
