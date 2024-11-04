@@ -34,6 +34,7 @@ func RegisterApiRouter(app *fiber.App, rqHandler *rest.Handler) {
 	table.Get("/id=:id", rqHandler.Table.GetTableByID)
 	table.Post("", rqHandler.Table.CreateTable)
 	table.Put("id=:id", rqHandler.Table.UpdateTableByID)
+	table.Put("/clear",rqHandler.Table.ClearTablesDaily)
 	table.Delete("/id=:id", rqHandler.Table.DeleteTableByID)
 
 	order.Get("", rqHandler.Order.GetAllOrder)

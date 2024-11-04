@@ -9,4 +9,5 @@ type TableRepository interface{
 	CreateTable(rq *entities.Table) (*entities.Table, error)
 	UpdateTableByID(rq *entities.Table) (*entities.Table, error)
 	DeleteTableByID(id string)(error)
+	ClearTablesDaily(id string) error
 }

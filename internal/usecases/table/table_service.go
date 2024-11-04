@@ -23,6 +23,7 @@ type TableUseCase interface {
 	CreateTable(*entities.Table) (*response.CreateTableResponse, error)
 	UpdateTableByID(*requests.UpdateTableRequest) (*response.UpdateTableResponse, error)
 	DeleteTableByID(string) (error)
+	ClearTablesDaily(id string) error
 }
 
 type TableService struct {
@@ -286,4 +287,9 @@ func (ts *TableService) DeleteTableByID(id string) error{
 	 }
 
 	 return ts.tableRepo.DeleteTableByID(id)
+}
+
+
+func (ts *TableService) ClearTablesDaily(id string) error{
+	return ts.tableRepo.ClearTablesDaily(id)
 }

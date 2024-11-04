@@ -22,7 +22,6 @@ func New(db *gorm.DB) Database {
 func (pg *PGGormDB) FindUserByID(id pgtype.UUID) (*entities.User, error) {
 	user := new(entities.User)
 
-
 	if err := pg.db.Preload("Tables").Where("id = ?", id).Find(user); err.Error != nil {
 		return nil, err.Error
 	}
@@ -136,6 +135,18 @@ func (pg *PGGormDB) DeleteTableByID(id string) error {
 
 	return nil
 }
+
+
+func (pg *PGGormDB) ClearTablesDaily(id string) error {
+	table := new(entities.Table)
+	return pg.db.Model(table).Where("id = ?", id).
+		Updates(entities.Table{ 
+			ID: id,
+			C_ID: pgtype.UUID{Valid: false},
+			Status: "A",
+		}).Error
+}
+
 
 func (pg *PGGormDB) FindAllOrder() ([]*entities.Order, error) {
 	orders := new([]*entities.Order)
@@ -278,20 +289,20 @@ func (pg *PGGormDB) DeleteMenu(id string) error {
 }
 
 func (pg *PGGormDB) DeleteOrderLineByID(id pgtype.UUID) error {
-    if err := pg.db.Where("id = ?", id).Delete(&entities.OrderLine{}).Error; err != nil {
-        return err
-    }
+	if err := pg.db.Where("id = ?", id).Delete(&entities.OrderLine{}).Error; err != nil {
+		return err
+	}
 
-    order := new(entities.Order)
-    if err := pg.db.Where("id = ?", id).Find(order).Error; err != nil {
-        return err
-    }
+	order := new(entities.Order)
+	if err := pg.db.Where("id = ?", id).Find(order).Error; err != nil {
+		return err
+	}
 
-    if err := pg.db.Delete(order).Error; err != nil {
-        return err
-    }
+	if err := pg.db.Delete(order).Error; err != nil {
+		return err
+	}
 
-    return nil
+	return nil
 }
 
 func (pg *PGGormDB) CreateIgLine(rq *entities.IGLine) (*entities.IGLine, error) {
@@ -330,7 +341,6 @@ func (pg *PGGormDB) FindAllMusicLine() ([]*entities.MusicLine, error) {
 
 	return musicLines, nil
 }
-
 
 func (pg *PGGormDB) CreateDiscount(rq *entities.Discount) (*entities.Discount, error) {
 	if err := pg.db.Create(rq).Error; err != nil {

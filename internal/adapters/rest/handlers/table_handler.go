@@ -180,3 +180,28 @@ func (trh *TableRestHandler) DeleteTableByID(c *fiber.Ctx) error{
 
 	return c.SendStatus(fiber.StatusNoContent)
 }
+
+
+func (trh *TableRestHandler) ClearTablesDaily(c *fiber.Ctx) error{
+	tables, err := trh.usecase.FindAllTable()
+
+	if err != nil{
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message":"Internal server error",
+			"error":err.Error(),
+		})
+	}
+
+	for _, obj := range tables.Tables{
+		err := trh.usecase.ClearTablesDaily(obj.ID)
+
+		if err != nil{
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message":"Internal server error",
+				"error":err.Error(),
+			})
+		}
+	}
+
+	return c.SendStatus(fiber.StatusNoContent)
+}

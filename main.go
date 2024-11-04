@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/B1gdawg0/se-project-backend/background"
 	"github.com/B1gdawg0/se-project-backend/internal/wire"
 	"github.com/B1gdawg0/se-project-backend/router"
 	"github.com/gofiber/fiber/v2"
@@ -20,6 +21,7 @@ func main(){
 
 	router.RegisterApiRouter(app, handler)
 
+	go background.DailyMonitor(app, handler)
 
 	app.Listen(":8000")
 }
