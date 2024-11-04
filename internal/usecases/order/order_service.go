@@ -2,6 +2,7 @@ package order
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -47,11 +48,31 @@ func (os *OrderService) FindAllOrder() (*response.GetOrdersResponse, error) {
 	}
 
 	for _, obj := range orders {
+		list2 := make([]response.CreateOrderLineResponse, 0)
+
+		for _, temp := range obj.OrderLines {
+			list2 = append(list2, response.CreateOrderLineResponse{
+				ID:       convert.UUIDToString(temp .ID),
+				Time:     temp.Time.Format("2006-01-02 15:04:05"),
+				O_ID:     convert.UUIDToString(temp.O_ID),
+				M_ID:     convert.UUIDToString(temp.M_ID),
+				Quantity: fmt.Sprintf("%d", temp.Quantity),
+				Price:    fmt.Sprintf("%.2f", temp.Price),
+				Menu: response.GetMenuResponse{
+					ID:          temp.Menu.ID,
+					Description: temp.Menu.Description,
+					Price:       temp.Menu.Price,
+					Url:         temp.Menu.Url,
+				},
+			})
+		}
+
 		list.Orders = append(list.Orders, response.GetOrderResponse{
 			ID:   convert.UUIDToString(obj.ID),
 			T_ID: obj.T_ID,
 			Time: obj.Time.Format("2006-01-02 15:04:05"),
 			Url: obj.Url,
+			Orderline: list2,
 		})
 	}
 
@@ -65,11 +86,31 @@ func (os *OrderService) FindOrderByID(id pgtype.UUID) (*response.GetOrderRespons
 		return nil, err
 	}
 
+	list := make([]response.CreateOrderLineResponse, 0)
+
+	for _, obj := range selected.OrderLines {
+		list = append(list, response.CreateOrderLineResponse{
+			ID:       convert.UUIDToString(obj.ID),
+			Time:     obj.Time.Format("2006-01-02 15:04:05"),
+			O_ID:     convert.UUIDToString(obj.O_ID),
+			M_ID:     convert.UUIDToString(obj.M_ID),
+			Quantity: fmt.Sprintf("%d", obj.Quantity),
+			Price:    fmt.Sprintf("%.2f", obj.Price),
+			Menu: response.GetMenuResponse{
+				ID:          obj.Menu.ID,
+				Description: obj.Menu.Description,
+				Price:       obj.Menu.Price,
+				Url:         obj.Menu.Url,
+			},
+		})
+	}
+
 	return &response.GetOrderResponse{
 		ID:   convert.UUIDToString(selected.ID),
 		T_ID: selected.T_ID,
 		Time: selected.Time.Format("2006-01-02 15:04:05"),
 		Url: selected.Url,
+		Orderline: list,
 	}, nil
 }
 

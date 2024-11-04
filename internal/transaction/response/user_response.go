@@ -8,6 +8,8 @@ type CreateUserResponse struct{
     Password string `json:"password"`
     Name     string `json:"name"`
     Phone    string `json:"phone"`
+
+	Table 	[]GetTableResponse `json:"tables"`
 }
 
 type FindUserResponse CreateUserResponse

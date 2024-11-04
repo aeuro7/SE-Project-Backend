@@ -1,6 +1,8 @@
 package queries
 
 import (
+	"fmt"
+
 	"github.com/B1gdawg0/se-project-backend/internal/infrastructure/entities"
 	"github.com/B1gdawg0/se-project-backend/internal/transaction/response"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -20,9 +22,12 @@ func New(db *gorm.DB) Database {
 func (pg *PGGormDB) FindUserByID(id pgtype.UUID) (*entities.User, error) {
 	user := new(entities.User)
 
-	if err := pg.db.Where("id = ?", id).Find(user); err.Error != nil {
+
+	if err := pg.db.Preload("Tables").Where("id = ?", id).Find(user); err.Error != nil {
 		return nil, err.Error
 	}
+
+	fmt.Println(user)
 
 	return user, nil
 }
@@ -31,7 +36,7 @@ func (pg *PGGormDB) FindUserByID(id pgtype.UUID) (*entities.User, error) {
 func (pg *PGGormDB) FindUserByEmail(email string) (*entities.User, error) {
 	user := new(entities.User)
 
-	if err := pg.db.Where("c_email = ?", email).Find(user); err.Error != nil {
+	if err := pg.db.Preload("Tables").Where("c_email = ?", email).Find(user); err.Error != nil {
 		return nil, err.Error
 	}
 
@@ -40,7 +45,7 @@ func (pg *PGGormDB) FindUserByEmail(email string) (*entities.User, error) {
 func (pg *PGGormDB) FindUserByPhone(phone string) (*entities.User, error) {
 	user := new(entities.User)
 
-	if err := pg.db.Where("c_phone = ?", phone).Find(user); err.Error != nil {
+	if err := pg.db.Preload("Tables").Where("c_phone = ?", phone).Find(user); err.Error != nil {
 		return nil, err.Error
 	}
 
@@ -51,7 +56,7 @@ func (pg *PGGormDB) FindUserByPhone(phone string) (*entities.User, error) {
 func (pg *PGGormDB) FindAll() ([]*entities.User, error) {
 	users := new([]*entities.User)
 
-	if err := pg.db.Find(&users).Error; err != nil {
+	if err := pg.db.Preload("Tables").Find(&users).Error; err != nil {
 		return nil, err
 	}
 
@@ -135,7 +140,7 @@ func (pg *PGGormDB) DeleteTableByID(id string) error {
 func (pg *PGGormDB) FindAllOrder() ([]*entities.Order, error) {
 	orders := new([]*entities.Order)
 
-	if err := pg.db.Find(orders).Error; err != nil {
+	if err := pg.db.Preload("OrderLines").Find(orders).Error; err != nil {
 		return nil, err
 	}
 
@@ -144,7 +149,7 @@ func (pg *PGGormDB) FindAllOrder() ([]*entities.Order, error) {
 
 func (pg *PGGormDB) FindOrderByID(id pgtype.UUID) (*entities.Order, error) {
 	order := new(entities.Order)
-	if err := pg.db.First(order, "id = ?", id).Error; err != nil {
+	if err := pg.db.Preload("OrderLines").First(order, "id = ?", id).Error; err != nil {
 		return nil, err
 	}
 
