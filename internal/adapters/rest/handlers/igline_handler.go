@@ -31,9 +31,10 @@ func (igh *IgLineHandler) CreateIgLine(c *fiber.Ctx) error {
 	}
 
 	payload := &entities.IGLine{
-		ID:   utils.GenerateUUID(),
-		C_ID: convert.StringToUUID(userID),
-		Name: request.IgAccount,
+		ID:    utils.GenerateUUID(),
+		C_ID:  convert.StringToUUID(userID),
+		Name:  request.IgAccount,
+		Image: request.IgImage,
 	}
 
 	res, err := igh.usecase.CreateIgLine(payload)
