@@ -14,9 +14,10 @@ type Handler struct {
 	Admin     *handlers.AdminRestHandler
 	IgLine    *handlers.IgLineHandler
 	Musicline *handlers.MusicLineHandler
+	Discount *handlers.DiscountRestHandler
 }
 
-func ProvideHandler(user *handlers.UserRestHandler, auth *handlers.AuthRestHandler, table *handlers.TableRestHandler, order *handlers.OrderRestHandler, orderline *handlers.OrderLineRestHandler, admin *handlers.AdminRestHandler, menu *handlers.MenuRestHandler, igLine *handlers.IgLineHandler, musicLine *handlers.MusicLineHandler) *Handler {
+func ProvideHandler(user *handlers.UserRestHandler, auth *handlers.AuthRestHandler, table *handlers.TableRestHandler, order *handlers.OrderRestHandler, orderline *handlers.OrderLineRestHandler, admin *handlers.AdminRestHandler, menu *handlers.MenuRestHandler, igLine *handlers.IgLineHandler, musicLine *handlers.MusicLineHandler, discount *handlers.DiscountRestHandler) *Handler {
 	return &Handler{
 		User:      user,
 		Auth:      auth,
@@ -27,5 +28,6 @@ func ProvideHandler(user *handlers.UserRestHandler, auth *handlers.AuthRestHandl
 		Admin:     admin,
 		IgLine:    igLine,
 		Musicline: musicLine,
+		Discount: discount,
 	}
 }
