@@ -51,6 +51,7 @@ func (os *OrderService) FindAllOrder() (*response.GetOrdersResponse, error) {
 			ID:   convert.UUIDToString(obj.ID),
 			T_ID: obj.T_ID,
 			Time: obj.Time.Format("2006-01-02 15:04:05"),
+			Url: obj.Url,
 		})
 	}
 
@@ -68,6 +69,7 @@ func (os *OrderService) FindOrderByID(id pgtype.UUID) (*response.GetOrderRespons
 		ID:   convert.UUIDToString(selected.ID),
 		T_ID: selected.T_ID,
 		Time: selected.Time.Format("2006-01-02 15:04:05"),
+		Url: selected.Url,
 	}, nil
 }
 
@@ -95,6 +97,7 @@ func (os *OrderService) CreateOrderByID(rq *entities.Order) (*response.CreateOrd
 		ID:   convert.UUIDToString(order.ID),
 		T_ID: order.T_ID,
 		Time: order.Time.Format("2006-01-02 15:04:05"),
+		Url: selected.Url,
 	}, nil
 }
 
@@ -147,5 +150,6 @@ func (os *OrderService) CreateOrderWithOrderLines(rq *requests.CreateOrderWithOr
 		ID:   convert.UUIDToString(created.ID),
 		T_ID: created.T_ID,
 		Time: created.Time.Format("2006-01-02 15:04:05"),
+		Url: created.Url,
 	}, nil
 }
