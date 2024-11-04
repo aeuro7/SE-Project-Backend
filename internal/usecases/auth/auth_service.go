@@ -58,6 +58,7 @@ func (as *AuthService) Login(rq *requests.LoginRequest) (*response.LoginResponse
 	}
 
 	response := &response.LoginResponse{
+		User: *user,
 		Token: token,
 	}
 
